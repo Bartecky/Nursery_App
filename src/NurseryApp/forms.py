@@ -1,5 +1,5 @@
 from django import forms
-from .models import Child, Parent, Group
+from .models import Child, Parent, Group, Teacher
 from django.core.validators import EmailValidator
 
 
@@ -31,10 +31,26 @@ class ChildCreateForm(forms.ModelForm):
 
 
 class GroupCreateForm(forms.ModelForm):
-
     class Meta:
         model = Group
         fields = [
             'name',
             'description'
         ]
+
+
+class TeacherCreateForm(forms.ModelForm):
+    class Meta:
+        model = Teacher
+        fields = [
+            'first_name',
+            'last_name',
+            'phone',
+            'email',
+        ]
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if len(phone) != 9:
+            raise forms.ValidationError('Number must be nine-digit')
+        return phone

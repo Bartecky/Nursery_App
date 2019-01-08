@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child, Group
-from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm
+from .models import Parent, Child, Group, Teacher
+from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm, TeacherCreateForm
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 
 
@@ -81,6 +81,7 @@ class ChildDeleteView(DeleteView):
     template_name = 'child-delete-view.html'
     success_url = reverse_lazy('main-view')
 
+
 class GroupListView(ListView):
     queryset = Group.objects.all()
     template_name = 'group-list-view.html'
@@ -96,15 +97,44 @@ class GroupDetailView(DetailView):
     queryset = Group.objects.all()
     template_name = 'group-detail-view.html'
 
+
 class GroupUpdateView(UpdateView):
     queryset = Group.objects.all()
     form_class = GroupCreateForm
     template_name = 'group-update-view.html'
+    success_url = reverse_lazy('group-list-view')
+
+
 
 class GroupDeleteView(DeleteView):
     model = Group
     template_name = 'group-delete-view.html'
-    success_url = reverse_lazy('group-list')
+    success_url = reverse_lazy('group-list-view')
 
 
+class TeacherCreateView(CreateView):
+    template_name = 'teacher-create-view.html'
+    form_class = TeacherCreateForm
+    success_url = reverse_lazy('teacher-list-view')
 
+
+class TeacherDetailView(DetailView):
+    queryset = Teacher.objects.all()
+    template_name = 'teacher-detail-view.html'
+
+class TeacherUpdateView(UpdateView):
+    queryset = Teacher.objects.all()
+    form_class = TeacherCreateForm
+    template_name = 'teacher-update-view.html'
+    success_url = reverse_lazy('teacher-list-view')
+
+
+class TeacherDeleteView(DeleteView):
+    model = Teacher
+    template_name = 'teacher-delete-view.html'
+    success_url = reverse_lazy('teacher-list-view')
+
+
+class TeacherListView(ListView):
+    queryset = Teacher.objects.all()
+    template_name = 'teacher-list-view.html'

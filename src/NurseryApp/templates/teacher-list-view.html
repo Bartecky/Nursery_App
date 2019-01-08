@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Teacher list
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+
+            {% for object in object_list %}
+                <a href="{% url 'teacher-detail-view' object.pk %}">{{ object }}</a>
+
+
+
+                <a href="{% url 'teacher-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'teacher-delete-view' object.pk %}">Delete</a>
+
+
+               <br>
+            {% empty %}
+                No teachers
+            {% endfor %}
+            <p>
+                <span>
+                    <a href="{% url 'teacher-create-view' %}">Add teacher!</a>
+                </span>
+            </p>
+        </div>
+    </div>
+{% endblock %}

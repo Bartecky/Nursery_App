@@ -21,8 +21,6 @@ class Child(models.Model):
     last_name = models.CharField(max_length=64)
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
 
-
-
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
 
@@ -39,13 +37,17 @@ class Group(models.Model):
         return self.name
 
 
+class Teacher(models.Model):
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
+    group = models.ForeignKey(Group, blank=True, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
 
 
-# Group
-# Teacher
 # Waiting list?
 # Activity
 # Caregiver
-
-
-
