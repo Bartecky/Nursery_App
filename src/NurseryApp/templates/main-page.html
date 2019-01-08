@@ -6,10 +6,10 @@
             <p>it's main page!</p>
             <ol>
             {% for child in parent.child_set.all %}
-                <li>{{ child }}</li>
+                <li><a href="{% url 'child-detail-view' child.pk %}">{{ child }}</a></li>
             {% endfor %}
             </ol>
-            <a href="{% url 'child-create-view' parent.id %}">Add</a>
+            <a href="{% url 'child-create-view' parent.pk %}">Add</a>
         </div>
    </div>
 {% endblock %}

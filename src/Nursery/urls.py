@@ -20,7 +20,10 @@ from NurseryApp.views import (
     NurseryLogoutView,
     SignupView,
     MainPageView,
-    ChildCreateView
+    ChildCreateView,
+    ChildDetailView,
+    ChildUpdateView,
+    ChildDeleteView
 )
 
 urlpatterns = [
@@ -30,7 +33,9 @@ urlpatterns = [
     url(r'^signup/$', SignupView.as_view(), name='signup-view'),
     url(r'^main/$', MainPageView.as_view(), name='main-view'),
     #
-    url(r'^parent/(?P<id>(\d)+)/add_child/$', ChildCreateView.as_view(), name='child-create-view')
-
+    url(r'^parent/(?P<pk>(\d)+)/add_child/$', ChildCreateView.as_view(), name='child-create-view'),
+    url(r'^child/detail/(?P<pk>(\d)+)/$', ChildDetailView.as_view(), name='child-detail-view'),
+    url(r'^child/update/(?P<pk>(\d)+)/$', ChildUpdateView.as_view(), name='child-update-view'),
+    url(r'^child/delete/(?P<pk>(\d)+)/$', ChildDeleteView.as_view(), name='child-delete-view'),
 
 ]

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from .models import Parent, Child
 from .forms import SignupUserForm, ChildCreateForm
-from django.views.generic import View, CreateView
+from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView
 
 
 class NurseryLoginView(LoginView):
@@ -60,6 +60,23 @@ class ChildCreateView(CreateView):
 
     def get_initial(self):
         initial = super(ChildCreateView, self).get_initial()
-        id_ = self.kwargs.get('id')
+        id_ = self.kwargs.get('pk')
         initial['parent'] = get_object_or_404(Parent, id=id_)
         return initial
+
+
+class ChildDetailView(DetailView):
+    queryset = Child.objects.all()
+    template_name = 'child-detail-view.html'
+
+
+class ChildUpdateView(UpdateView):
+    queryset = Child.objects.all()
+    form_class = ChildCreateForm
+    template_name = 'child-update-view.html'
+
+
+class ChildDeleteView(DeleteView):
+    model = Child
+    template_name = 'child-delete-view.html'
+    success_url = reverse_lazy('child-list')
