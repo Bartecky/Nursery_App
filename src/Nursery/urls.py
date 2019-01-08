@@ -15,13 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url
-from NurseryApp.views import NurseryLoginView, NurseryLogoutView, SignupView, MainPageView
+from NurseryApp.views import (
+    NurseryLoginView,
+    NurseryLogoutView,
+    SignupView,
+    MainPageView,
+    ChildCreateView
+)
 
 urlpatterns = [
     url(r'admin/', admin.site.urls),
     url(r'^$', NurseryLoginView.as_view(), name='login-view'),
     url(r'^logout/$', NurseryLogoutView.as_view(), name='logout-view'),
     url(r'^signup/$', SignupView.as_view(), name='signup-view'),
-    url(r'^main/$', MainPageView.as_view(), name='main-view')
+    url(r'^main/$', MainPageView.as_view(), name='main-view'),
+    #
+    url(r'^parent/(?P<id>(\d)+)/add_child/$', ChildCreateView.as_view(), name='child-create-view')
+
 
 ]

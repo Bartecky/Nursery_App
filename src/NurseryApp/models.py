@@ -1,10 +1,11 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 class Parent(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
@@ -28,3 +29,6 @@ class Child(models.Model):
     class Meta:
         verbose_name_plural = 'children'
         ordering = ['last_name']
+
+
+

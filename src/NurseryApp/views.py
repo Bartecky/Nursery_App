@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
-
-from .models import Parent
-from .forms import SignupUserForm
-from django.views.generic import View
+from django.contrib.auth import login, authenticate
+from .models import Parent, Child
+from .forms import SignupUserForm, ChildCreateForm
+from django.views.generic import View, CreateView
 
 
 class NurseryLoginView(LoginView):
@@ -25,13 +25,14 @@ class SignupView(View):
         form = SignupUserForm(request.POST)
         ctx = {'form': form}
         if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password'],
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name'],
-                email=form.cleaned_data['email']
-            )
+            data = form.cleaned_data
+            user = User(
+                username=data['username'],
+                email=data['email'],
+                first_name=data['first_name'],
+                last_name=data['last_name'])
+            user.set_password(data['password'])
+            user.save()
             parent = Parent.objects.create(
                 user=user,
                 first_name=user.first_name,
@@ -39,11 +40,26 @@ class SignupView(View):
                 email=user.email
             )
             parent.save()
-            user.save()
+            user_auth = authenticate(username=data['username'], password=data['password'])
+            login(request, user_auth)
             return redirect('main-view')
         return render(request, 'signup-page.html', ctx)
 
 
 class MainPageView(View):
     def get(self, request):
-        return render(request, 'main-page.html', {})
+        user = get_object_or_404(User, id=self.request.user.id)
+        parent = get_object_or_404(Parent, user=user)
+        return render(request, 'main-page.html', {'parent': parent})
+
+
+class ChildCreateView(CreateView):
+    template_name = 'child-create-view.html'
+    form_class = ChildCreateForm
+    success_url = reverse_lazy('main-view')
+
+    def get_initial(self):
+        initial = super(ChildCreateView, self).get_initial()
+        id_ = self.kwargs.get('id')
+        initial['parent'] = get_object_or_404(Parent, id=id_)
+        return initial

@@ -4,6 +4,12 @@
    <div class="row">
         <div class="col-sm-12">
             <p>it's main page!</p>
+            <ol>
+            {% for child in parent.child_set.all %}
+                <li>{{ child }}</li>
+            {% endfor %}
+            </ol>
+            <a href="{% url 'child-create-view' parent.id %}">Add</a>
         </div>
    </div>
 {% endblock %}

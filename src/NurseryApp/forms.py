@@ -1,4 +1,5 @@
 from django import forms
+from .models import Child, Parent
 from django.core.validators import EmailValidator
 
 
@@ -15,3 +16,15 @@ class SignupUserForm(forms.Form):
         if data['password'] != data['confirm_password']:
             raise forms.ValidationError('passwords are not the same')
         return data
+
+
+class ChildCreateForm(forms.ModelForm):
+    parent = forms.ModelChoiceField(queryset=Parent.objects.all(), widget=forms.HiddenInput)
+
+    class Meta:
+        model = Child
+        fields = [
+            'parent',
+            'first_name',
+            'last_name'
+        ]
