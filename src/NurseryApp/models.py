@@ -20,6 +20,7 @@ class Child(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
+    day_of_birth = models.DateField()
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):

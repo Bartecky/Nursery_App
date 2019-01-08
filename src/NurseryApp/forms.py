@@ -1,6 +1,7 @@
 from django import forms
 from .models import Child, Parent, Group, Teacher, Caregiver
 from django.core.validators import EmailValidator
+import datetime
 
 
 class SignupUserForm(forms.Form):
@@ -20,14 +21,17 @@ class SignupUserForm(forms.Form):
 
 class ChildCreateForm(forms.ModelForm):
     parent = forms.ModelChoiceField(queryset=Parent.objects.all(), widget=forms.HiddenInput)
-
+    year = datetime.date.today().year
+    day_of_birth = forms.DateField(widget=forms.SelectDateWidget(
+        years=[x for x in range(year - 4, year)]
+    ))
     class Meta:
         model = Child
         fields = [
             'parent',
             'first_name',
             'last_name',
-
+            'day_of_birth'
         ]
 
 
@@ -59,6 +63,7 @@ class TeacherCreateForm(forms.ModelForm):
 
 class CaregiverCreateForm(forms.ModelForm):
     parent = forms.ModelChoiceField(queryset=Parent.objects.all(), widget=forms.HiddenInput)
+
     class Meta:
         model = Caregiver
         fields = [
