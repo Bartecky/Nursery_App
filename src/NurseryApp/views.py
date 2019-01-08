@@ -3,9 +3,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child
-from .forms import SignupUserForm, ChildCreateForm
-from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView
+from .models import Parent, Child, Group
+from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm
+from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 
 
 class NurseryLoginView(LoginView):
@@ -79,4 +79,32 @@ class ChildUpdateView(UpdateView):
 class ChildDeleteView(DeleteView):
     model = Child
     template_name = 'child-delete-view.html'
-    success_url = reverse_lazy('child-list')
+    success_url = reverse_lazy('main-view')
+
+class GroupListView(ListView):
+    queryset = Group.objects.all()
+    template_name = 'group-list-view.html'
+
+
+class GroupCreateView(CreateView):
+    template_name = 'group-create-view.html'
+    form_class = GroupCreateForm
+    success_url = reverse_lazy('group-list-view')
+
+
+class GroupDetailView(DetailView):
+    queryset = Group.objects.all()
+    template_name = 'group-detail-view.html'
+
+class GroupUpdateView(UpdateView):
+    queryset = Group.objects.all()
+    form_class = GroupCreateForm
+    template_name = 'group-update-view.html'
+
+class GroupDeleteView(DeleteView):
+    model = Group
+    template_name = 'group-delete-view.html'
+    success_url = reverse_lazy('group-list')
+
+
+

@@ -23,7 +23,13 @@ from NurseryApp.views import (
     ChildCreateView,
     ChildDetailView,
     ChildUpdateView,
-    ChildDeleteView
+    ChildDeleteView,
+    GroupCreateView,
+    GroupDetailView,
+    GroupUpdateView,
+    GroupDeleteView,
+    GroupListView
+
 )
 
 urlpatterns = [
@@ -37,5 +43,11 @@ urlpatterns = [
     url(r'^child/detail/(?P<pk>(\d)+)/$', ChildDetailView.as_view(), name='child-detail-view'),
     url(r'^child/update/(?P<pk>(\d)+)/$', ChildUpdateView.as_view(), name='child-update-view'),
     url(r'^child/delete/(?P<pk>(\d)+)/$', ChildDeleteView.as_view(), name='child-delete-view'),
+    url(r'^add_group/$', GroupCreateView.as_view(), name='group-create-view'),
+    url(r'^group/detail/(?P<pk>(\d)+)/$', GroupDetailView.as_view(), name='group-detail-view'),
+    url(r'^group/update/(?P<pk>(\d)+)/$', GroupUpdateView.as_view(), name='group-update-view'),
+    url(r'^group/delete/(?P<pk>(\d)+)/$', GroupDeleteView.as_view(), name='group-delete-view'),
+    url(r'^group/list/$', GroupListView.as_view(), name='group-list-view')
+
 
 ]

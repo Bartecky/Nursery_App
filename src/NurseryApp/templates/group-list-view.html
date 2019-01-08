@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Group list
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+
+            {% for object in object_list %}
+            <a href="{% url 'group-detail-view' object.pk %}">{{ object }}
+                <small> ({{ object.child_set.all.count }})
+
+                <a href="{% url 'group-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'group-delete-view' object.pk %}">Delete</a>
+                </small>
+                </a><br>
+            {% empty %}
+                No groups
+            {% endfor %}
+            <p>
+                <span>
+                    <a href="{% url 'group-create-view' %}">Add a group!</a>
+                </span>
+            </p>
+        </div>
+    </div>
+{% endblock %}

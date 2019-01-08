@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Group Detail
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Group Detail</h3>
+            {{ object }}
+            <p>
+                <a href="{% url '' %}">Update</a> |
+                <a href="">Delete</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

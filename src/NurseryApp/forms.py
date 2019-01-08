@@ -1,5 +1,5 @@
 from django import forms
-from .models import Child, Parent
+from .models import Child, Parent, Group
 from django.core.validators import EmailValidator
 
 
@@ -27,4 +27,14 @@ class ChildCreateForm(forms.ModelForm):
             'parent',
             'first_name',
             'last_name'
+        ]
+
+
+class GroupCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Group
+        fields = [
+            'name',
+            'description'
         ]

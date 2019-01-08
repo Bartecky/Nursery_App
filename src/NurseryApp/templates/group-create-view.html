@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Add group
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Add group</h3>
+            {% include 'form.html' with form=form btn_title='Add group' %}
+        </div>
+    </div>
+{% endblock %}
