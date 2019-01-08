@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child, Group, Teacher
-from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm, TeacherCreateForm
+from .models import Parent, Child, Group, Teacher, Caregiver
+from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm, TeacherCreateForm, CaregiverCreateForm
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 
 
@@ -56,12 +56,11 @@ class MainPageView(View):
 class ChildCreateView(CreateView):
     template_name = 'child-create-view.html'
     form_class = ChildCreateForm
-    success_url = reverse_lazy('main-view')
 
     def get_initial(self):
         initial = super(ChildCreateView, self).get_initial()
-        id_ = self.kwargs.get('pk')
-        initial['parent'] = get_object_or_404(Parent, id=id_)
+        pk = self.kwargs.get('pk')
+        initial['parent'] = get_object_or_404(Parent, pk=pk)
         return initial
 
 
@@ -105,7 +104,6 @@ class GroupUpdateView(UpdateView):
     success_url = reverse_lazy('group-list-view')
 
 
-
 class GroupDeleteView(DeleteView):
     model = Group
     template_name = 'group-delete-view.html'
@@ -121,6 +119,7 @@ class TeacherCreateView(CreateView):
 class TeacherDetailView(DetailView):
     queryset = Teacher.objects.all()
     template_name = 'teacher-detail-view.html'
+
 
 class TeacherUpdateView(UpdateView):
     queryset = Teacher.objects.all()
@@ -138,3 +137,31 @@ class TeacherDeleteView(DeleteView):
 class TeacherListView(ListView):
     queryset = Teacher.objects.all()
     template_name = 'teacher-list-view.html'
+
+
+class CaregiverCreateView(CreateView):
+    template_name = 'caregiver-create-view.html'
+    form_class = CaregiverCreateForm
+
+    def get_initial(self):
+        initial = super(CaregiverCreateView, self).get_initial()
+        pk = self.kwargs.get('pk')
+        initial['parent'] = get_object_or_404(Parent, pk=pk)
+        return initial
+
+
+class CaregiverDetailView(DetailView):
+    queryset = Caregiver.objects.all()
+    template_name = 'caregiver-detail-view.html'
+
+
+class CaregiverUpdateView(UpdateView):
+    queryset = Caregiver.objects.all()
+    form_class = CaregiverCreateForm
+    template_name = 'caregiver-update-view.html'
+
+
+class CaregiverDeleteView(DeleteView):
+    model = Caregiver
+    template_name = 'caregiver-delete-view.html'
+    success_url = reverse_lazy('main-view')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.urls import reverse_lazy
 
 
 # Create your models here.
@@ -23,6 +24,9 @@ class Child(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return reverse_lazy('child-detail-view', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name_plural = 'children'
@@ -48,6 +52,19 @@ class Teacher(models.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
-# Waiting list?
-# Activity
-# Caregiver
+class Caregiver(models.Model):
+    parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
+    email = models.EmailField(unique=True, blank=True, null=True)
+    relationship_with_child = models.CharField(max_length=64, blank=True, null=True)
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
+
+    def get_absolute_url(self):
+        return reverse_lazy('caregiver-detail-view', kwargs={'pk': self.pk})
+
+
+

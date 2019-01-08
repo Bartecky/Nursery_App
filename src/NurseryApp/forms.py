@@ -1,5 +1,5 @@
 from django import forms
-from .models import Child, Parent, Group, Teacher
+from .models import Child, Parent, Group, Teacher, Caregiver
 from django.core.validators import EmailValidator
 
 
@@ -26,7 +26,8 @@ class ChildCreateForm(forms.ModelForm):
         fields = [
             'parent',
             'first_name',
-            'last_name'
+            'last_name',
+
         ]
 
 
@@ -47,6 +48,26 @@ class TeacherCreateForm(forms.ModelForm):
             'last_name',
             'phone',
             'email',
+        ]
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if len(phone) != 9:
+            raise forms.ValidationError('Number must be nine-digit')
+        return phone
+
+
+class CaregiverCreateForm(forms.ModelForm):
+    parent = forms.ModelChoiceField(queryset=Parent.objects.all(), widget=forms.HiddenInput)
+    class Meta:
+        model = Caregiver
+        fields = [
+            'parent',
+            'first_name',
+            'last_name',
+            'phone',
+            'email',
+            'relationship_with_child'
         ]
 
     def clean_phone(self):

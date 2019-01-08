@@ -33,8 +33,11 @@ from NurseryApp.views import (
     TeacherDetailView,
     TeacherUpdateView,
     TeacherDeleteView,
-    TeacherListView
-
+    TeacherListView,
+    CaregiverCreateView,
+    CaregiverDetailView,
+    CaregiverUpdateView,
+    CaregiverDeleteView,
 )
 
 urlpatterns = [
@@ -58,6 +61,9 @@ urlpatterns = [
     url(r'^teacher/update/(?P<pk>(\d)+)/$', TeacherUpdateView.as_view(), name='teacher-update-view'),
     url(r'^teacher/delete/(?P<pk>(\d)+)/$', TeacherDeleteView.as_view(), name='teacher-delete-view'),
     url(r'^teacher/list/$', TeacherListView.as_view(), name='teacher-list-view'),
-
+    url(r'^parent/(?P<pk>(\d)+)/add_caregiver/$', CaregiverCreateView.as_view(), name='caregiver-create-view'),
+    url(r'^caregiver/detail/(?P<pk>(\d)+)/$', CaregiverDetailView.as_view(), name='caregiver-detail-view'),
+    url(r'^caregiver/update/(?P<pk>(\d)+)/$', CaregiverUpdateView.as_view(), name='caregiver-update-view'),
+    url(r'^caregiver/delete/(?P<pk>(\d)+)/$', CaregiverDeleteView.as_view(), name='caregiver-delete-view'),
 
 ]
