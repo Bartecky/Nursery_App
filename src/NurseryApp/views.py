@@ -92,9 +92,9 @@ class ChildDeleteView(DeleteView):
     success_url = reverse_lazy('main-view')
 
 
-class GroupListView(ListView):
-    queryset = Group.objects.all()
-    template_name = 'group-list-view.html'
+class ChildListView(ListView):
+    queryset = Child.objects.all().order_by('registration_time')
+    template_name = 'child-list-view.html'
 
 
 class GroupCreateView(CreateView):
@@ -119,6 +119,11 @@ class GroupDeleteView(DeleteView):
     model = Group
     template_name = 'group-delete-view.html'
     success_url = reverse_lazy('group-list-view')
+
+
+class GroupListView(ListView):
+    queryset = Group.objects.all()
+    template_name = 'group-list-view.html'
 
 
 class TeacherCreateView(CreateView):
@@ -232,7 +237,6 @@ class DietDeleteView(DeleteView):
 class DietListView(ListView):
     queryset = Diet.objects.all()
     template_name = 'diet-list-view.html'
-
 
 # class WaitingListView(View):
 #     def get(self, request):

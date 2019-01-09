@@ -5,15 +5,14 @@
         <div class="col-sm-6">
             {% if not request.user.is_superuser %}
                 <h2>Your Child</h2>
+                {% if not parent.child_set.all %}
+                    <p>
+                        <strong>You have to register your child</strong>
+                    </p>
+                {% endif %}
 
                 {% for child in parent.child_set.all %}
                     <h5><a href="{% url 'child-detail-view' child.pk %}">{{ child }}</a></h5>
-                    <p>
-                        Date of birth : {{ child.day_of_birth }}
-                    </p>
-                {% empty %}
-                    <strong>You have to register your child <a
-                            href="{% url 'child-create-view' parent.pk %}">here</a></strong>
                 {% endfor %}
                 </div>
                 <div class="col-sm-6">

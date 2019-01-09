@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
-
+CHILD_STATUS = (
+    ('1', 'Verification'),
+    ('2', 'Waiting'),
+    ('3', 'Accepted')
+)
 # Create your models here.
 class Parent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -23,6 +27,8 @@ class Child(models.Model):
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
     activity = models.ManyToManyField('Activity', blank=True)
     diet = models.ManyToManyField('Diet', blank=True)
+    registration_time = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=1, choices=CHILD_STATUS, default='1')
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)

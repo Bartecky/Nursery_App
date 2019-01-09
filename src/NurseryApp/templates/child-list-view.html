@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8">
+            <h3>Children List (all registered in nursery)</h3>
+            <table>
+                <tr>
+                    <th>First name &nbsp;</th>
+                    <th>Last name &nbsp;</th>
+                    <th>Parent &nbsp;</th>
+                    <th>Date of birth &nbsp;</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                {% for object in object_list %}
+                    <tr>
+                        <td>{{ object.first_name }}</td>
+                        <td>{{ object.last_name }}</td>
+                        <td>{{ object.parent }}</td>
+                        <td>{{ object.day_of_birth }}</td>
+                        <td>{{ object.get_status_display }}</td>
+                        <td><input type="button" onclick="location.href=''"
+                               class="btn btn-info"
+                               value="Add to waiting list"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+    </div>
+{% endblock %}
