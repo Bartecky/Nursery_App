@@ -1,5 +1,5 @@
 from django import forms
-from .models import Child, Parent, Group, Teacher, Caregiver
+from .models import Child, Parent, Group, Teacher, Caregiver, Activity, Diet
 from django.core.validators import EmailValidator
 import datetime
 
@@ -25,6 +25,7 @@ class ChildCreateForm(forms.ModelForm):
     day_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=[x for x in range(year - 4, year)]
     ))
+
     class Meta:
         model = Child
         fields = [
@@ -80,3 +81,21 @@ class CaregiverCreateForm(forms.ModelForm):
         if len(phone) != 9:
             raise forms.ValidationError('Number must be nine-digit')
         return phone
+
+
+class ActivityCreateForm(forms.ModelForm):
+    class Meta:
+        model = Activity
+        fields = [
+            'name',
+            'description'
+        ]
+
+
+class DietCreateForm(forms.ModelForm):
+    class Meta:
+        model = Diet
+        fields = [
+            'name',
+            'description'
+        ]

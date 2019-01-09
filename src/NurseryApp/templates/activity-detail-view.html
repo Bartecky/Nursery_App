@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Activity Detail
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Activity Detail</h3>
+            {{ object }}
+            <p>
+                <a href="{% url 'activity-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'activity-delete-view' object.pk %}">Delete</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

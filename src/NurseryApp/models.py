@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 
@@ -22,8 +21,8 @@ class Child(models.Model):
     last_name = models.CharField(max_length=64)
     day_of_birth = models.DateField()
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
-    activity = models.ManyToManyField('Activity')
-    diet = models.ManyToManyField('Diet')
+    activity = models.ManyToManyField('Activity', blank=True, null=True)
+    diet = models.ManyToManyField('Diet', blank=True, null=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -39,6 +38,7 @@ class Child(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, null=True)
+    # max_capacity
 
     def __str__(self):
         return self.name
@@ -77,7 +77,25 @@ class Activity(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse_lazy('activity-detail-view', kwargs={'pk': self.pk})
+
+    class Meta:
+        verbose_name_plural = 'Activities'
+
+
 
 class Diet(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse_lazy('diet-detail-view', kwargs={'pk': self.pk})
+
+
+class Waiting_list(models.Model):
+    child = models.ManyToManyField(Child)
+    group = models.ManyToManyField(Group)

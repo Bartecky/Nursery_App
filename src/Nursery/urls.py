@@ -38,6 +38,17 @@ from NurseryApp.views import (
     CaregiverDetailView,
     CaregiverUpdateView,
     CaregiverDeleteView,
+    ActivityCreateView,
+    ActivityDetailView,
+    ActivityUpdateView,
+    ActivityDeleteView,
+    ActivityListView,
+    DietCreateView,
+    DietDetailView,
+    DietUpdateView,
+    DietDeleteView,
+    DietListView,
+    # WaitingListView
 )
 
 urlpatterns = [
@@ -65,5 +76,17 @@ urlpatterns = [
     url(r'^caregiver/detail/(?P<pk>(\d)+)/$', CaregiverDetailView.as_view(), name='caregiver-detail-view'),
     url(r'^caregiver/update/(?P<pk>(\d)+)/$', CaregiverUpdateView.as_view(), name='caregiver-update-view'),
     url(r'^caregiver/delete/(?P<pk>(\d)+)/$', CaregiverDeleteView.as_view(), name='caregiver-delete-view'),
+    url(r'^add_activity/$', ActivityCreateView.as_view(), name='activity-create-view'),
+    url(r'^activity/detail/(?P<pk>(\d)+)/$', ActivityDetailView.as_view(), name='activity-detail-view'),
+    url(r'^activity/update/(?P<pk>(\d)+)/$', ActivityUpdateView.as_view(), name='activity-update-view'),
+    url(r'^activity/delete/(?P<pk>(\d)+)/$', ActivityDeleteView.as_view(), name='activity-delete-view'),
+    url(r'^activity/list/$', ActivityListView.as_view(), name='activity-list-view'),
+    url(r'^add_diet/$', DietCreateView.as_view(), name='diet-create-view'),
+    url(r'^diet/detail/(?P<pk>(\d)+)/$', DietDetailView.as_view(), name='diet-detail-view'),
+    url(r'^diet/update/(?P<pk>(\d)+)/$', DietUpdateView.as_view(), name='diet-update-view'),
+    url(r'^diet/delete/(?P<pk>(\d)+)/$', DietDeleteView.as_view(), name='diet-delete-view'),
+    url(r'^diet/list/$', DietListView.as_view(), name='diet-list-view'),
+    # url(r'^waiting_list/$', WaitingListView.as_view(), name='waiting-list-view')
+
 
 ]

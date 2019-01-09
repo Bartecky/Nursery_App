@@ -3,8 +3,14 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child, Group, Teacher, Caregiver
-from .forms import SignupUserForm, ChildCreateForm, GroupCreateForm, TeacherCreateForm, CaregiverCreateForm
+from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet, Waiting_list
+from .forms import (SignupUserForm,
+                    ChildCreateForm,
+                    GroupCreateForm,
+                    TeacherCreateForm,
+                    CaregiverCreateForm,
+                    ActivityCreateForm,
+                    DietCreateForm)
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 
 
@@ -165,3 +171,63 @@ class CaregiverDeleteView(DeleteView):
     model = Caregiver
     template_name = 'caregiver-delete-view.html'
     success_url = reverse_lazy('main-view')
+
+
+class ActivityCreateView(CreateView):
+    queryset = Activity.objects.all()
+    form_class = ActivityCreateForm
+    template_name = 'activity-create-view.html'
+
+
+class ActivityDetailView(DetailView):
+    queryset = Activity.objects.all()
+    template_name = 'activity-detail-view.html'
+
+
+class ActivityUpdateView(UpdateView):
+    queryset = Activity.objects.all()
+    form_class = ActivityCreateForm
+    template_name = 'activity-update-view.html'
+
+
+class ActivityDeleteView(DeleteView):
+    model = Activity
+    template_name = 'activity-delete-view.html'
+    success_url = reverse_lazy('main-view')
+
+
+class ActivityListView(ListView):
+    queryset = Activity.objects.all()
+    template_name = 'activity-list-view.html'
+
+
+class DietCreateView(CreateView):
+    queryset = Diet.objects.all()
+    form_class = DietCreateForm
+    template_name = 'diet-create-view.html'
+
+
+class DietDetailView(DetailView):
+    queryset = Diet.objects.all()
+    template_name = 'diet-detail-view.html'
+
+
+class DietUpdateView(UpdateView):
+    queryset = Diet.objects.all()
+    form_class = DietCreateForm
+    template_name = 'diet-update-view.html'
+
+
+class DietDeleteView(DeleteView):
+    model = Diet
+    template_name = 'diet-delete-view.html'
+    success_url = reverse_lazy('main-view')
+
+
+class DietListView(ListView):
+    queryset = Diet.objects.all()
+    template_name = 'diet-list-view.html'
+
+
+# class WaitingListView(View):
+#     pass

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Activity list
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+
+            {% for object in object_list %}
+                <a href="{% url 'activity-detail-view' object.pk %}">{{ object }}</a>
+
+
+
+                <a href="{% url 'activity-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'activity-delete-view' object.pk %}">Delete</a>
+
+
+               <br>
+            {% empty %}
+                No activities
+            {% endfor %}
+            <p>
+                <span>
+                    <a href="{% url 'activity-create-view' %}">Add activity!</a>
+                </span>
+            </p>
+        </div>
+    </div>
+{% endblock %}

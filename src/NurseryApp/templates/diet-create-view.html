@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Add diet
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Add diet</h3>
+            {% include 'form.html' with form=form btn_title='Add diet' %}
+        </div>
+    </div>
+{% endblock %}

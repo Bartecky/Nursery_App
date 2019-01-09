@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Diet list
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+
+            {% for object in object_list %}
+                <a href="{% url 'diet-detail-view' object.pk %}">{{ object }}</a>
+
+
+
+                <a href="{% url 'diet-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'diet-delete-view' object.pk %}">Delete</a>
+
+
+               <br>
+            {% empty %}
+                No diets
+            {% endfor %}
+            <p>
+                <span>
+                    <a href="{% url 'teacher-create-view' %}">Add diet!</a>
+                </span>
+            </p>
+        </div>
+    </div>
+{% endblock %}
