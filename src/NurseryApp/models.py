@@ -21,8 +21,8 @@ class Child(models.Model):
     last_name = models.CharField(max_length=64)
     day_of_birth = models.DateField()
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
-    activity = models.ManyToManyField('Activity', blank=True, null=True)
-    diet = models.ManyToManyField('Diet', blank=True, null=True)
+    activity = models.ManyToManyField('Activity', blank=True)
+    diet = models.ManyToManyField('Diet', blank=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)

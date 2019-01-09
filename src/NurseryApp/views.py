@@ -55,8 +55,13 @@ class SignupView(View):
 class MainPageView(View):
     def get(self, request):
         user = get_object_or_404(User, id=self.request.user.id)
-        parent = get_object_or_404(Parent, user=user)
-        return render(request, 'main-page.html', {'parent': parent})
+        groups = Group.objects.all()
+        ctx = {
+            'groups': groups,
+        }
+        if not user.is_superuser:
+            ctx['parent'] = get_object_or_404(Parent, user=user)
+        return render(request, 'main-page.html', ctx)
 
 
 class ChildCreateView(CreateView):
@@ -230,4 +235,6 @@ class DietListView(ListView):
 
 
 # class WaitingListView(View):
-#     pass
+#     def get(self, request):
+#         children = Child.objects.all()
+#         return render(request, 'waiting-list-view.html', {'children': children})
