@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm-6">
-            {% if not request.user.is_superuser %}
+    {% if not request.user.is_superuser %}
+
+        <div class="row">
+            <div class="col-sm-6">
                 <h2>Your Child</h2>
                 {% if not parent.child_set.all %}
                     <p>
@@ -14,34 +15,34 @@
                 {% for child in parent.child_set.all %}
                     <h5><a href="{% url 'child-detail-view' child.pk %}">{{ child }}</a></h5>
                 {% endfor %}
-                </div>
-                <div class="col-sm-6">
-                    <h2>Your Caregivers</h2>
-                    <p>
-                        <strong>Only caregivers are authorized to pick up children from the nursery</strong>
-                    </p>
-                    {% for caregiver in parent.caregiver_set.all %}
-                        <h5><a href="{% url 'caregiver-detail-view' caregiver.pk %}">{{ caregiver }}</a></h5>
-                    {% endfor %}
-                </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input type="button" onclick="location.href='{% url "child-create-view" parent.pk %}'"
-                               class="btn btn-info"
-                               value="Add new child">
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="button" onclick="location.href='{% url "caregiver-create-view" parent.pk %}'"
-                               class="btn btn-info"
-                               value="Add new caregiver">
-                    </div>
-                </div>
-            {% endif %}
+            </div>
+            <div class="col-sm-6">
+                <h2>Your Caregivers</h2>
+                <p>
+                    <strong>Only caregivers are authorized to pick up children from the nursery</strong>
+                </p>
+                {% for caregiver in parent.caregiver_set.all %}
+                    <h5><a href="{% url 'caregiver-detail-view' caregiver.pk %}">{{ caregiver }}</a></h5>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="button" onclick="location.href='{% url "child-create-view" parent.pk %}'"
+                       class="btn btn-info"
+                       value="Add new child">
+            </div>
+            <div class="col-sm-6">
+                <input type="button" onclick="location.href='{% url "caregiver-create-view" parent.pk %}'"
+                       class="btn btn-info"
+                       value="Add new caregiver">
+            </div>
+        </div>
+    {% endif %}
     <hr>
     <div class="row">
         <div class="col-sm-12">
-            <p>
+            <p class="green-color">
                 Quisque faucibus tempor odio rutrum laoreet. Phasellus ut nibh id nulla tempor congue vitae ut
                 tellus.
                 Vestibulum bibendum sagittis sem non viverra. Integer sed accumsan libero, vel scelerisque erat.
@@ -60,24 +61,47 @@
     </div>
     <hr>
     <div class="row">
-        <div class="col-sm-12">
-            <p>
-                <small>Tutaj bedą dostępne grupy lub możliwe aktywności / diety</small>
-            </p>
-            <div>
-                <table>
+        <div class="col-sm-4">
+            <table>
+                <tr>
+                    <th style="color: royalblue">Group</th>
+                    <th style="color: royalblue">Current capacity</th>
+                </tr>
+                {% for group in groups %}
                     <tr>
-                        <th>Group name</th>
-                        <th>Current capacity</th>
+                        <td>{{ group }}</td>
+                        <td align="center">{{ group.child_set.all|length }} / {{ group.max_capacity }}</td>
                     </tr>
-                    {% for group in groups %}
-                        <tr>
-                            <td>{{ group }}</td>
-                            <td>{{ group.child_set.all|length }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <table>
+                <tr>
+                    <th style="color: royalblue">Diet</th>
+                    <th style="color: royalblue">Children on diet</th>
+                </tr>
+                {% for diet in diets %}
+                    <tr>
+                        <td>{{ diet }}</td>
+                        <td align="center">{{ diet.child_set.all|length }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <table>
+                <tr>
+                    <th style="color: royalblue">Activity</th>
+                    <th style="color: royalblue">Participating children</th>
+                </tr>
+                {% for activity in activities %}
+                    <tr>
+                        <td>{{ activity }}</td>
+                        <td align="center">{{ activity.child_set.all|length }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 {% endblock %}
