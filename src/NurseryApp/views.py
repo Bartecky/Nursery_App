@@ -3,14 +3,15 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet, Waiting_list
+from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet
 from .forms import (SignupUserForm,
                     ChildCreateForm,
                     GroupCreateForm,
                     TeacherCreateForm,
                     CaregiverCreateForm,
                     ActivityCreateForm,
-                    DietCreateForm)
+                    DietCreateForm,
+                    AddingToGroupForm)
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 
 
@@ -55,9 +56,13 @@ class SignupView(View):
 class MainPageView(View):
     def get(self, request):
         user = get_object_or_404(User, id=self.request.user.id)
-        groups = Group.objects.all()
+        groups = Group.objects.all().order_by('pk')
+        diets = Diet.objects.all().order_by('name')
+        activities = Activity.objects.all().order_by('name')
         ctx = {
             'groups': groups,
+            'diets': diets,
+            'activities': activities
         }
         if not user.is_superuser:
             ctx['parent'] = get_object_or_404(Parent, user=user)
@@ -95,6 +100,12 @@ class ChildDeleteView(DeleteView):
 class ChildListView(ListView):
     queryset = Child.objects.all().order_by('registration_time')
     template_name = 'child-list-view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        groups = Group.objects.all().order_by('pk')
+        context['groups'] = groups
+        return context
 
 
 class GroupCreateView(CreateView):
@@ -177,6 +188,7 @@ class CaregiverUpdateView(UpdateView):
     template_name = 'caregiver-update-view.html'
 
 
+
 class CaregiverDeleteView(DeleteView):
     model = Caregiver
     template_name = 'caregiver-delete-view.html'
@@ -238,7 +250,32 @@ class DietListView(ListView):
     queryset = Diet.objects.all()
     template_name = 'diet-list-view.html'
 
-# class WaitingListView(View):
-#     def get(self, request):
-#         children = Child.objects.all()
-#         return render(request, 'waiting-list-view.html', {'children': children})
+
+class VerifyChildView(View):
+    def get(self, request, pk):
+        child = Child.objects.get(pk=pk)
+        if child.status == '1':
+            child.status = '2'
+        child.save()
+        return render(request, 'verify-child-view.html', {'child': child})
+
+
+class AddingToGroupView(View):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        child = Child.objects.get(pk=pk)
+        form = AddingToGroupForm(initial={'child': child})
+        return render(request, 'child-add-group-view.html', {'form': form})
+
+    def post(self, request, pk):
+        form = AddingToGroupForm(request.POST or None)
+        if form.is_valid():
+            child = Child.objects.get(pk=pk)
+            group = form.cleaned_data['group']
+            group_object = Group.objects.get(name=group)
+            group_object.child_set.add(child)
+            child.status = '3'
+            child.save()
+            group_object.save()
+            return redirect(reverse_lazy('child-list-view'))
+        return render(request, 'child-add-group-view.html', {'form': form})

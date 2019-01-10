@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load fontawesome %}
 
 {% block title %}
     {{ block.super }} | Child Detail
@@ -6,13 +7,44 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-12">
-            <h3>Child Detail</h3>
-            {{ object }}
-            <p>
+        <div class="col-sm-6">
+            <h4>Child Detail</h4>
+            <h4 class="green-color">{{ object }}</h4>
+            <div>{% fontawesome_icon 'birthday-cake' color='green' %} Birthday {{ object.day_of_birth }}</div>
+            <small>
                 <a href="{% url 'child-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'child-delete-view' object.pk %}">Delete</a>
-            </p>
+            </small>
+        </div>
+        <div class="col-sm-6">
+            <h4>Register status</h4>
+            {{ object.get_status_display }}<hr>
+            <h4>Parent</h4>
+            <div>
+                Login:{{ object.parent.user.username }}<br>
+                Name: {{ object.parent }}<br>
+                Phone: {{ object.parent.phone }}<br>
+                Email: {{ object.parent.email }}<br>
+            </div>
+            <hr>
+            <div>
+                <h4>Caregivers</h4>
+                {% for caregiver in object.parent.caregiver_set.all %}
+                    Name: {{ caregiver }}<br>
+                    Phone: {{ caregiver.phone }}<br>
+                    Email: {{ caregiver.email }}<br>
+                    Relation: {{ caregiver.relationship_with_child }}<br>
+                    <small>
+                        <a href="{% url 'caregiver-update-view' caregiver.pk %}">Update</a> |
+                        <a href="{% url 'caregiver-delete-view' caregiver.pk %}">Delete</a>
+                    </small><br><br>
+                {% empty %}
+                    You should add some caregivers, able to pick up child from Nursery or contact with us.
+                    <a href="{% url 'caregiver-create-view' object.parent.pk %}">Add caregiver</a>
+                {% endfor %}
+            </div>
+
+
         </div>
     </div>
 {% endblock %}

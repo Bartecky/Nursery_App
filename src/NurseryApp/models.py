@@ -7,6 +7,8 @@ CHILD_STATUS = (
     ('2', 'Waiting'),
     ('3', 'Accepted')
 )
+
+
 # Create your models here.
 class Parent(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -44,6 +46,8 @@ class Child(models.Model):
 class Group(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, null=True)
+    max_capacity = models.IntegerField()
+
     # max_capacity
 
     def __str__(self):
@@ -90,7 +94,6 @@ class Activity(models.Model):
         verbose_name_plural = 'Activities'
 
 
-
 class Diet(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(blank=True, null=True)
@@ -101,7 +104,3 @@ class Diet(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('diet-detail-view', kwargs={'pk': self.pk})
 
-
-class Waiting_list(models.Model):
-    child = models.ManyToManyField(Child)
-    group = models.ManyToManyField(Group)

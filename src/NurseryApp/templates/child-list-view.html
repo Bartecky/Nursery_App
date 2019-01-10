@@ -6,29 +6,48 @@
             <h3>Children List (all registered in nursery)</h3>
             <table>
                 <tr>
-                    <th>First name &nbsp;</th>
-                    <th>Last name &nbsp;</th>
-                    <th>Parent &nbsp;</th>
-                    <th>Date of birth &nbsp;</th>
+                    <th>Child</th>
+                    <th>Parent</th>
+                    <th>Date of birth</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
                 {% for object in object_list %}
                     <tr>
-                        <td>{{ object.first_name }}</td>
-                        <td>{{ object.last_name }}</td>
+                        <td><a href="{% url 'child-detail-view' object.pk %}">{{ object }}</a></td>
                         <td>{{ object.parent }}</td>
                         <td>{{ object.day_of_birth }}</td>
+                        {% if object.get_status_display == 'Accepted' %}
+                            <strong><td class="green-color">{{ object.get_status_display }}</td></strong>
+                        {% else %}
                         <td>{{ object.get_status_display }}</td>
-                        <td><input type="button" onclick="location.href=''"
-                               class="btn btn-info"
-                               value="Add to waiting list"></td>
+                        {% endif %}
+                        {% if  object.get_status_display == 'Verification' %}
+                            <td><input type="button" onclick="location.href='{% url 'verify-child-view'  object.pk %}'"
+                                       class="btn btn-success"
+                                       value="Add to waiting list"></td>
+                        {% elif object.get_status_display == 'Waiting' %}
+                            <td><input type="button"
+                                       onclick="location.href='{% url 'add-child-group-view'  object.pk %}'"
+                                       class="btn btn-primary"
+                                       value="Add to group"></td>
+                        {% elif object.get_status_display == 'Accepted' %}
+                            <td><input type="button"
+                                       onclick="location.href='{% url 'child-delete-view'  object.pk %}'"
+                                       class="btn btn-warning"
+                                       value="Remove form Nursery"></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>
         </div>
         <div class="col-sm-4">
-
+            <h3>Group List</h3>
+            {% for group in groups %}
+                {{ group }}<br>
+                {{ group.description }}
+                <hr>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

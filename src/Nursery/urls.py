@@ -49,7 +49,8 @@ from NurseryApp.views import (
     DietUpdateView,
     DietDeleteView,
     DietListView,
-    # WaitingListView
+    VerifyChildView,
+    AddingToGroupView
 )
 
 urlpatterns = [
@@ -88,7 +89,8 @@ urlpatterns = [
     url(r'^diet/update/(?P<pk>(\d)+)/$', DietUpdateView.as_view(), name='diet-update-view'),
     url(r'^diet/delete/(?P<pk>(\d)+)/$', DietDeleteView.as_view(), name='diet-delete-view'),
     url(r'^diet/list/$', DietListView.as_view(), name='diet-list-view'),
-    # url(r'^waiting_list/$', WaitingListView.as_view(), name='waiting-list-view')
+    url(r'^verify_child/(?P<pk>(\d)+)/$', VerifyChildView.as_view(), name='verify-child-view'),
+    url(r'^child/(?P<pk>(\d)+)/add_group/$', AddingToGroupView.as_view(), name='add-child-group-view')
 
 
 ]
