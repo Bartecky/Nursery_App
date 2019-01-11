@@ -52,7 +52,8 @@ from NurseryApp.views import (
     VerifyChildView,
     AddingChildToGroupView,
     AddingTeacherToGroupView,
-    ParentListView
+    ParentListView,
+    SetParentNotActive
 )
 
 urlpatterns = [
@@ -94,7 +95,8 @@ urlpatterns = [
     url(r'^verify_child/(?P<pk>(\d)+)/$', VerifyChildView.as_view(), name='verify-child-view'),
     url(r'^child/(?P<pk>(\d)+)/add_group/$', AddingChildToGroupView.as_view(), name='add-child-group-view'),
     url(r'^teacher/(?P<pk>(\d)+)/add_group/$', AddingTeacherToGroupView.as_view(), name='add-teacher-group-view'),
-    url(r'^parents/$', ParentListView.as_view(), name='parent-list-view')
+    url(r'^parents/$', ParentListView.as_view(), name='parent-list-view'),
+    url(r'^parents/inactive/$', SetParentNotActive.as_view(), name='parent-inactive-view')
 
 
 ]

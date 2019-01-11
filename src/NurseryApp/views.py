@@ -327,3 +327,14 @@ class AddingTeacherToGroupView(View):
 class ParentListView(ListView):
     queryset = Parent.objects.all()
     template_name = 'parent-list-view.html'
+
+
+class SetParentNotActive(View):
+    def get(self, request):
+        not_active_parents = Parent.objects.all().filter(child=None)
+        object_list = Parent.objects.all()
+        for parent in not_active_parents:
+            parent.active = False
+            parent.save()
+        messages.success(request, '{}'.format('Set \'INACTIVE\' status for users without registered children'))
+        return render(request, 'parent-list-view.html', {'object_list': object_list})

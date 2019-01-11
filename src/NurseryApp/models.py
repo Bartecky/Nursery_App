@@ -16,6 +16,7 @@ class Parent(models.Model):
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
     email = models.EmailField(unique=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -31,6 +32,7 @@ class Child(models.Model):
     diet = models.ManyToManyField('Diet', blank=True)
     registration_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=CHILD_STATUS, default='1')
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
