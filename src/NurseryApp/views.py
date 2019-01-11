@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.contrib.auth import login, authenticate
+from django.contrib.contenttypes.models import ContentType
 from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet
 from .forms import (SignupUserForm,
                     ChildCreateForm,
@@ -12,11 +13,14 @@ from .forms import (SignupUserForm,
                     ActivityCreateForm,
                     DietCreateForm,
                     AddingChildToGroupForm,
-                    AddingTeacherToGroupForm)
+                    AddingTeacherToGroupForm,
+                    )
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
 import datetime
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
 
 class NurseryLoginView(LoginView):
     template_name = 'login-page.html'
@@ -49,6 +53,7 @@ class SignupView(View):
                 last_name=user.last_name,
                 email=user.email
             )
+            user.save()
             parent.save()
             user_auth = authenticate(username=data['username'], password=data['password'])
             login(request, user_auth)
@@ -62,10 +67,12 @@ class MainPageView(View):
         groups = Group.objects.all().order_by('pk')
         diets = Diet.objects.all().order_by('name')
         activities = Activity.objects.all().order_by('name')
+        # messages = Message.objects.all()
         ctx = {
             'groups': groups,
             'diets': diets,
-            'activities': activities
+            'activities': activities,
+            # 'messages': messages
         }
         if not user.is_superuser:
             ctx['parent'] = get_object_or_404(Parent, user=user)
@@ -75,6 +82,7 @@ class MainPageView(View):
 class ChildCreateView(CreateView):
     template_name = 'child-create-view.html'
     form_class = ChildCreateForm
+
 
     def get_initial(self):
         initial = super(ChildCreateView, self).get_initial()
@@ -177,7 +185,7 @@ class TeacherDeleteView(DeleteView):
 
 
 class TeacherListView(ListView):
-    queryset = Teacher.objects.all()
+    queryset = Teacher.objects.all().order_by('group__name')
     template_name = 'teacher-list-view.html'
 
 
@@ -309,7 +317,11 @@ class AddingTeacherToGroupView(View):
         pk = self.kwargs.get('pk')
         teacher = Teacher.objects.get(pk=pk)
         form = AddingTeacherToGroupForm(initial={'teacher': teacher})
-        return render(request, 'teacher-add-group-view.html', {'form': form})
+        ctx = {
+            'form': form,
+            'teacher': teacher
+        }
+        return render(request, 'teacher-add-group-view.html', ctx)
 
     def post(self, request, pk):
         form = AddingTeacherToGroupForm(request.POST or None)
@@ -338,3 +350,15 @@ class SetParentNotActive(View):
             parent.save()
         messages.success(request, '{}'.format('Set \'INACTIVE\' status for users without registered children'))
         return render(request, 'parent-list-view.html', {'object_list': object_list})
+
+# class MessageCreateView(CreateView):
+#     form_class = MessageCreateForm
+#     template_name = 'message-create-view.html'
+#
+#     def get_initial(self):
+#         initial = super(MessageCreateView, self).get_initial()
+#         sender_pk = self.kwargs.get('sender_pk')
+#         receiver_pk = self.kwargs.get('receiver_pk')
+#         initial['sender'] = User.objects.get(pk=sender_pk)
+#         initial['receiver'] = User.objects.get(pk=receiver_pk)
+#         return initial

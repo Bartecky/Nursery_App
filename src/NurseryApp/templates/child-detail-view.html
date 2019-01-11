@@ -9,20 +9,57 @@
     <div class="row">
         <div class="col-sm-6">
             <h4>Child Detail</h4>
-            <h4 class="green-color">{{ object }}</h4>
-            <div>{% fontawesome_icon 'birthday-cake' color='green' %} Birthday {{ object.day_of_birth }}</div>
+            <h4 class="orange">{{ object }}</h4>
+            Sex: {{ object.get_sex_display }}
+            <div>{% fontawesome_icon 'birthday-cake' color='blue' %} Birthday {{ object.day_of_birth }}</div>
+            <h5 class="orange">{{ months }}</h5>
             <small>
                 <a href="{% url 'child-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'child-delete-view' object.pk %}">Delete</a>
-                <h3>{{ months }}</h3>
             </small>
+            <div>
+                <hr>
+                <h4>Acivities</h4>
+                {% for activity in object.activity.all %}
+                    {{ activity }}<br>
+                {% empty %}
+                    No activities |
+                    <small><a href="{% url 'child-update-view' object.pk %}">Add</a></small>
+                {% endfor %}
+            </div>
+            <div>
+                <hr>
+            <h4>Diets</h4>
+                {% for diet in object.diet.all %}
+                    {{ diet }}<br>
+                {% empty %}
+                    No special diets |
+                    <small><a href="{% url 'child-update-view' object.pk %}">Add</a></small>
+                {% endfor %}
+            </div>
+            <div>
+            <hr>
+            <h4>Group</h4>
+            <strong class="orange">{{ object.group }}</strong><br><br>
+                <h4>Teacher</h4>
+                {% for teacher in object.group.teacher_set.all %}
+                    {{ teacher }}<br>
+                    {{ teacher.phone }}<br>
+                    {{ teacher.email }}<br><hr>
+                {% empty %}
+                    None
+                {% endfor %}
         </div>
+        </div>
+
+
         <div class="col-sm-6">
             <h4>Register status</h4>
-            {{ object.get_status_display }}<hr>
+            {{ object.get_status_display }}
+            <hr>
             <h4>Parent</h4>
             <div>
-                Login:{{ object.parent.user.username }}<br>
+                Login: {{ object.parent.user.username }}<br>
                 Name: {{ object.parent }}<br>
                 Phone: {{ object.parent.phone }}<br>
                 Email: {{ object.parent.email }}<br>

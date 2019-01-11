@@ -5,15 +5,40 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Group Detail</h3><hr>
-            <h4>{{ object }}</h4>
-            <p>{{ object.description }}</p>
-            <p>
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Group Detail</h4>
+        <h4 class="orange">{{ object }}</h4>
+        {% if object.desription %}
+            <small>Description: {{ object.description }}</small>{% endif %}
+        <strong>Max capacity : {{ object.max_capacity }}</strong><br>
+        <strong>Current capacity : {{ object.child_set.all|length }}</strong><br>
+        <small>
                 <a href="{% url 'group-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'group-delete-view' object.pk %}">Delete</a>
-            </p>
+            </small>
+        <hr>
+        <h4>Teachers in group</h4>
+        <div>
+            {% for teacher in object.teacher_set.all %}
+                {{ teacher }}<br>
+            {% endfor %}
         </div>
+        <hr>
     </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <h4>Children in group</h4>
+        {% for child in object.child_set.all %}
+            {{ child }}<br>
+        {% endfor %}
+    </div>
+    <div class="col-sm-6">
+        <h4>Parents</h4>
+        {% for child in object.child_set.all %}
+            {{ child.parent }}<br>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

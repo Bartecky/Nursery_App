@@ -2,10 +2,9 @@
 
 {% block content %}
     {% if not request.user.is_superuser %}
-
         <div class="row">
             <div class="col-sm-6">
-                <h2>Your Child</h2>
+                <h3>Your Child</h3>
                 {% if not parent.child_set.all %}
                     <p>
                         <strong>You have to register your child</strong>
@@ -17,7 +16,7 @@
                 {% endfor %}
             </div>
             <div class="col-sm-6">
-                <h2>Your Caregivers</h2>
+                <h3>Your Caregivers</h3>
                 <p>
                     <strong>Only caregivers are authorized to pick up children from the nursery</strong>
                 </p>
@@ -40,32 +39,13 @@
         </div>
     {% endif %}
     <hr>
-    <div class="row">
-        <div class="col-sm-12">
-            <p class="green-color">
-                Quisque faucibus tempor odio rutrum laoreet. Phasellus ut nibh id nulla tempor congue vitae ut
-                tellus.
-                Vestibulum bibendum sagittis sem non viverra. Integer sed accumsan libero, vel scelerisque erat.
-                Praesent ut ante nibh. Quisque a risus in nisi consectetur consectetur. In eu interdum turpis. Donec
-                ut
-                lectus at quam vulputate tincidunt. Nulla nec leo eu turpis sodales vestibulum. Vestibulum
-                scelerisque
-                nisi neque, et placerat mauris viverra ut. Cras in faucibus ipsum. Praesent nec magna imperdiet,
-                congue
-                nisi eu, gravida urna. Suspendisse nunc eros, cursus quis velit quis, eleifend tincidunt odio. Nulla
-                blandit leo a turpis mattis, ut commodo elit porta. Duis consequat urna quis tortor iaculis, ut
-                pharetra
-                felis venenatis. Donec dictum urna sed erat malesuada, et iaculis enim ornare.
-            </p>
-        </div>
-    </div>
-    <hr>
+
     <div class="row">
         <div class="col-sm-4">
             <table>
                 <tr>
-                    <th style="color: royalblue">Group</th>
-                    <th style="color: royalblue">Current capacity</th>
+                    <th class="orange">Group</th>
+                    <th class="orange">Current capacity</th>
                 </tr>
                 {% for group in groups %}
                     <tr>
@@ -78,8 +58,8 @@
         <div class="col-sm-4">
             <table>
                 <tr>
-                    <th style="color: royalblue">Diet</th>
-                    <th style="color: royalblue">Children on diet</th>
+                    <th class="orange">Diet</th>
+                    <th class="orange">Children on diet</th>
                 </tr>
                 {% for diet in diets %}
                     <tr>
@@ -92,8 +72,8 @@
         <div class="col-sm-4">
             <table>
                 <tr>
-                    <th style="color: royalblue">Activity</th>
-                    <th style="color: royalblue">Participating children</th>
+                    <th class="orange">Activity</th>
+                    <th class="orange">Participating children</th>
                 </tr>
                 {% for activity in activities %}
                     <tr>

@@ -8,6 +8,11 @@ CHILD_STATUS = (
     ('3', 'Accepted')
 )
 
+CHILD_SEX = (
+    ('1', 'M'),
+    ('2', 'F')
+)
+
 
 # Create your models here.
 class Parent(models.Model):
@@ -28,11 +33,12 @@ class Child(models.Model):
     last_name = models.CharField(max_length=64)
     day_of_birth = models.DateField()
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
-    activity = models.ManyToManyField('Activity', blank=True)
-    diet = models.ManyToManyField('Diet', blank=True)
+    activity = models.ManyToManyField('Activity', blank=True, null=True)
+    diet = models.ManyToManyField('Diet', blank=True, null=True)
     registration_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=CHILD_STATUS, default='1')
     active = models.BooleanField(default=True)
+    sex = models.CharField(max_length=1, choices=CHILD_SEX)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -50,13 +56,12 @@ class Group(models.Model):
     description = models.TextField(blank=True, null=True)
     max_capacity = models.IntegerField()
 
-    # max_capacity
-
     def __str__(self):
         return self.name
 
 
 class Teacher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
@@ -106,3 +111,10 @@ class Diet(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('diet-detail-view', kwargs={'pk': self.pk})
 
+
+# class Message(models.Model):
+#     sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
+#     receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
+#     subject = models.CharField(max_length=256)
+#     content = models.TextField()
+#     add_time = models.DateTimeField(auto_now_add=True)

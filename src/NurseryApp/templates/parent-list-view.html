@@ -6,49 +6,34 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-12 col-xs-12">
-            <h4>Active parents</h4>
-            <table>
-                <tr class="green-color">
-                    <th>Username</th>
-                    <th>Parent</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Child</th>
-                </tr>
+        <div class="col-sm-6 col-xs-6">
+            <h4>Active parent List</h4>
+            <div>
                 {% for object in object_list %}
-                    {% if object.child_set.all %}
-                        <tr>
-                            <td>{{ object.user.username }}</td>
-                            <td align="center">{{ object }}</td>
-                            <td align="center">{{ object.phone }}</td>
-                            <td align="center">{{ object.email }}</td>
-                            {% for child in object.child_set.all %}
-                                <td>{{ child }}</td>
-                            {% endfor %}
-                        </tr>
+                    {% if object.child_set.all.count == 0 %}
+                    {% else %}
+                        <strong>Parent {{ object }}</strong><br>
+                        {% for child in object.child_set.all %}
+                            {{ child }}<br>
+                        {% endfor %}
+                        <hr>
                     {% endif %}
                 {% endfor %}
-            </table>
+            </div>
         </div>
-    </div>
-    <div>
-    <hr>
-        <table>
-            <h4>Not-active Parents (without registered children)</h4>
+        <div class="col-sm-6 col-xs-6">
+            <h4>Parent without children</h4>
             {% for object in object_list %}
-                {% if not object.child_set.all and object.active %}
-                    {{ object }}<br>
+                {% if object.child_set.all.count == 0 and object.active %}
+                    <strong>{{ object }}</strong><br>
+                    <input type="button"
+                           onclick="location.href='{% url 'parent-inactive-view' %}'"
+                           class="btn btn-danger"
+                           value="Inactive all">
+                    {% else %}
                 {% endif %}
-            {% empty %}
-                List is empty
             {% endfor %}
-        </table>
-    </div>
-    <div>
-    <input type="button"
-           onclick="location.href='{% url 'parent-inactive-view' %}'"
-           class="btn btn-danger"
-           value="Inactive all">
+        </div>
+
     </div>
 {% endblock %}

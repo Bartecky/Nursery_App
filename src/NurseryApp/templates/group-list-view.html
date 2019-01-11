@@ -16,7 +16,7 @@
                 </tr>
                 {% for object in object_list %}
                     <tr>
-                        <td><a href="{% url 'group-detail-view' object.pk %}">{{ object.name }}</a></td>
+                        <td><a class="orange" href="{% url 'group-detail-view' object.pk %}">{{ object.name }}</a></td>
                         <td align="center">{{ object.child_set.all|length }}</td>
                         <td align="center">{{ object.max_capacity }}</td>
                         <td align="center">{{ object.description }}</td>

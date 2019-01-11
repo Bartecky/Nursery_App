@@ -15,7 +15,7 @@
             </tr>
             {% for object in object_list %}
                 <tr>
-                <td>{{ object.name }}</td>
+                    <td><a class="orange" href="{% url 'diet-detail-view' object.pk %}">{{ object.name }}</a></td>
                 <td>{{ object.description }}</td>
                 <td align="center">{{ object.child_set.all|length }}</td>
             </tr>

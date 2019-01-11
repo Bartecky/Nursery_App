@@ -18,7 +18,7 @@
                         <td>{{ object.parent }}</td>
                         <td>{{ object.day_of_birth }}</td>
                         {% if object.get_status_display == 'Accepted' %}
-                            <td class="green-color">{{ object.get_status_display }}</td>
+                            <td class="orange">{{ object.get_status_display }}</td>
                         {% else %}
                         <td>{{ object.get_status_display }}</td>
                         {% endif %}

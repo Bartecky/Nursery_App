@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load fontawesome %}
 
 {% block title %}
     {{ block.super }} | Teacher Detail
@@ -7,12 +8,18 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <h3>Teacher Detail</h3>
-            {{ object }}
-            <p>
-                <a href="{% url 'teacher-update-view' object.pk %}">Update</a> |
-                <a href="{% url 'teacher-delete-view' object.pk %}">Delete</a>
-            </p>
+           <h4>Teacher Detail</h4>
+            <h4 class="orange">{{ object }}</h4>
+            Group:
+            <strong>{{ object.group }}</strong> {% fontawesome_icon 'users' color='blue' %}<br>
+            {% fontawesome_icon 'phone' color='blue' %} {{ object.phone }}<br>
+            {% fontawesome_icon 'envelope' color='blue' %} {{ object.email }}<br>
+            <small>
+                <a href="{% url 'child-update-view' object.pk %}">Update</a> |
+                <a href="{% url 'child-delete-view' object.pk %}">Delete</a>
+            </small>
+            <div>
         </div>
+    </div>
     </div>
 {% endblock %}

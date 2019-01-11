@@ -7,12 +7,23 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <h3>Diet Detail</h3>
-            {{ object }}
-            <p>
+            <h4>Diet detail</h4>
+            <h4 class="orange">{{ object }}</h4>
+            {% if object.description %}
+                Description: {{ object.description }}{% endif %}<br>
+            <small>
                 <a href="{% url 'diet-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'diet-delete-view' object.pk %}">Delete</a>
-            </p>
+            </small>
+            <hr>
+            <h4>Children on {{ object }} diet</h4>
+            <div>
+                {% for child in object.child_set.all %}
+                    <a href="{% url 'child-detail-view' child.pk %}">{{ child }}</a><br>
+                {% endfor %}
+            </div>
+
         </div>
     </div>
+
 {% endblock %}

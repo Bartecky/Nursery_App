@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load fontawesome %}
 
 {% block title %}
     {{ block.super }} | Caregiver Detail
@@ -7,12 +8,16 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <h3>Caregiver Detail</h3>
-            {{ object }}
-            <p>
+           <h4>Caregiver Detail</h4>
+            <h4 class="orange">{{ object }}</h4>
+            {% fontawesome_icon 'phone' color='blue' %} {{ object.phone }}<br>
+            {% fontawesome_icon 'envelope' color='blue' %} {{ object.email }}<br>
+            <small>
                 <a href="{% url 'caregiver-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'caregiver-delete-view' object.pk %}">Delete</a>
-            </p>
+            </small>
+            <div>
         </div>
+    </div>
     </div>
 {% endblock %}
