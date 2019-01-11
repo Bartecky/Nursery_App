@@ -42,9 +42,10 @@
             </table>
         </div>
         <div class="col-sm-4">
-            <h3>Group List</h3>
+            <h3>Available groups</h3>
             {% for group in groups %}
-                <strong><a href="{% url 'group-detail-view' group.pk %}">{{ group }}</a> </strong><br>
+                <strong><a href="{% url 'group-detail-view' group.pk %}">{{ group }}</a></strong>
+                {{ group.child_set.all|length }} / {{ group.max_capacity }}<br>
                 {{ group.description }}
                 <hr>
             {% endfor %}

@@ -15,7 +15,8 @@ from .forms import (SignupUserForm,
                     AddingTeacherToGroupForm)
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
-
+import datetime
+from dateutil.relativedelta import relativedelta
 
 class NurseryLoginView(LoginView):
     template_name = 'login-page.html'
@@ -85,6 +86,18 @@ class ChildCreateView(CreateView):
 class ChildDetailView(DetailView):
     queryset = Child.objects.all()
     template_name = 'child-detail-view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        child_day_of_birth = Child.objects.get(pk=self.kwargs.get('pk')).day_of_birth
+        now = datetime.date.today()
+        rd = relativedelta(now, child_day_of_birth)
+        if rd.years == 0:
+            months = '{} months'.format(rd.months)
+        else:
+            months = '{} year(s), {} month(s)'.format(rd.years, rd.months)
+        context['months'] = months
+        return context
 
 
 class ChildUpdateView(UpdateView):
@@ -273,16 +286,22 @@ class AddingChildToGroupView(View):
 
     def post(self, request, pk):
         form = AddingChildToGroupForm(request.POST or None)
+        ctx = {
+            'form': form
+        }
         if form.is_valid():
             child = Child.objects.get(pk=pk)
             group = form.cleaned_data['group']
             group_object = Group.objects.get(name=group)
+            if group_object.child_set.all().count() >= group_object.max_capacity:
+                messages.success(request, 'This group if full, pick another one')
+                return redirect(reverse_lazy('child-list-view'))
             group_object.child_set.add(child)
             child.status = '3'
             child.save()
             group_object.save()
             return redirect(reverse_lazy('child-list-view'))
-        return render(request, 'child-add-group-view.html', {'form': form})
+        return render(request, 'child-add-group-view.html', ctx)
 
 
 class AddingTeacherToGroupView(View):

@@ -17,11 +17,7 @@
                     <tr>
                         <td>{{ object.name }}</td>
                         <td>{{ object.description }}</td>
-                        {% for child in object.child_set.all %}
-                            <td align="center">{{ child }}</td>
-                        {% empty %}
-                            <td align="center">0</td>
-                        {% endfor %}
+                        <td align="center">{{ object.child_set.all|length }}</td>
                     </tr>
                 {% endfor %}
             </table>
