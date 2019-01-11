@@ -11,8 +11,10 @@ from .forms import (SignupUserForm,
                     CaregiverCreateForm,
                     ActivityCreateForm,
                     DietCreateForm,
-                    AddingToGroupForm)
+                    AddingChildToGroupForm,
+                    AddingTeacherToGroupForm)
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
+from django.contrib import messages
 
 
 class NurseryLoginView(LoginView):
@@ -98,7 +100,7 @@ class ChildDeleteView(DeleteView):
 
 
 class ChildListView(ListView):
-    queryset = Child.objects.all().order_by('registration_time')
+    queryset = Child.objects.all().order_by('-status')
     template_name = 'child-list-view.html'
 
     def get_context_data(self, **kwargs):
@@ -133,7 +135,7 @@ class GroupDeleteView(DeleteView):
 
 
 class GroupListView(ListView):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by('pk')
     template_name = 'group-list-view.html'
 
 
@@ -186,7 +188,6 @@ class CaregiverUpdateView(UpdateView):
     queryset = Caregiver.objects.all()
     form_class = CaregiverCreateForm
     template_name = 'caregiver-update-view.html'
-
 
 
 class CaregiverDeleteView(DeleteView):
@@ -254,21 +255,24 @@ class DietListView(ListView):
 class VerifyChildView(View):
     def get(self, request, pk):
         child = Child.objects.get(pk=pk)
+        children = Child.objects.all().filter(status='2').count()
         if child.status == '1':
             child.status = '2'
         child.save()
-        return render(request, 'verify-child-view.html', {'child': child})
+        messages.success(request, '{}'.format('Changed child\'s status on \'Waiting\''))
+        return render(request, 'verify-child-view.html', {'child': child,
+                                                          'children': children})
 
 
-class AddingToGroupView(View):
+class AddingChildToGroupView(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs.get('pk')
         child = Child.objects.get(pk=pk)
-        form = AddingToGroupForm(initial={'child': child})
+        form = AddingChildToGroupForm(initial={'child': child})
         return render(request, 'child-add-group-view.html', {'form': form})
 
     def post(self, request, pk):
-        form = AddingToGroupForm(request.POST or None)
+        form = AddingChildToGroupForm(request.POST or None)
         if form.is_valid():
             child = Child.objects.get(pk=pk)
             group = form.cleaned_data['group']
@@ -279,3 +283,28 @@ class AddingToGroupView(View):
             group_object.save()
             return redirect(reverse_lazy('child-list-view'))
         return render(request, 'child-add-group-view.html', {'form': form})
+
+
+class AddingTeacherToGroupView(View):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        teacher = Teacher.objects.get(pk=pk)
+        form = AddingTeacherToGroupForm(initial={'teacher': teacher})
+        return render(request, 'teacher-add-group-view.html', {'form': form})
+
+    def post(self, request, pk):
+        form = AddingTeacherToGroupForm(request.POST or None)
+        if form.is_valid():
+            teacher = Teacher.objects.get(pk=pk)
+            group = form.cleaned_data['group']
+            group_object = Group.objects.get(name=group)
+            group_object.teacher_set.add(teacher)
+            teacher.save()
+            group_object.save()
+            return redirect(reverse_lazy('teacher-list-view'))
+        return render(request, 'teacher-add-group-view.html', {'form': form})
+
+
+class ParentListView(ListView):
+    queryset = Parent.objects.all()
+    template_name = 'parent-list-view.html'

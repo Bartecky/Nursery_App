@@ -16,15 +16,19 @@
                 </tr>
                 {% for object in object_list %}
                     <tr>
-                        <td>{{ object.name }}</td>
+                        <td><a href="{% url 'group-detail-view' object.pk %}">{{ object.name }}</a></td>
                         <td align="center">{{ object.child_set.all|length }}</td>
                         <td align="center">{{ object.max_capacity }}</td>
                         <td align="center">{{ object.description }}</td>
                     </tr>
                 {% endfor %}
             </table>
+            <hr>
             <div>
-                <a href="{% url 'group-create-view' %}">Add a group!</a>
+                <input type="button"
+                       onclick="location.href='{% url 'group-create-view' %}'"
+                       class="btn btn-success"
+                       value="Add new group">
             </div>
         </div>
     </div>

@@ -7,25 +7,31 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12 col-xs-12">
-
-            {% for object in object_list %}
-                <a href="{% url 'activity-detail-view' object.pk %}">{{ object }}</a>
-
-
-
-                <a href="{% url 'activity-update-view' object.pk %}">Update</a> |
-                <a href="{% url 'activity-delete-view' object.pk %}">Delete</a>
-
-
-               <br>
-            {% empty %}
-                No activities
-            {% endfor %}
-            <p>
-                <span>
-                    <a href="{% url 'activity-create-view' %}">Add activity!</a>
-                </span>
-            </p>
+            <table>
+                <tr>
+                    <th>Activity name</th>
+                    <th>Description</th>
+                    <th>Children</th>
+                </tr>
+                {% for object in object_list %}
+                    <tr>
+                        <td>{{ object.name }}</td>
+                        <td>{{ object.description }}</td>
+                        {% for child in object.child_set.all %}
+                            <td align="center">{{ child }}</td>
+                        {% empty %}
+                            <td align="center">0</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            <div>
+                <input type="button"
+                       onclick="location.href='{% url 'activity-create-view' %}'"
+                       class="btn btn-success"
+                       value="Add new activity">
+            </div>
         </div>
     </div>
 {% endblock %}

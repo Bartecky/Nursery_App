@@ -101,6 +101,11 @@ class DietCreateForm(forms.ModelForm):
         ]
 
 
-class AddingToGroupForm(forms.Form):
-    group = forms.ModelChoiceField(queryset=Group.objects.all().order_by('pk'), widget=forms.RadioSelect)
+class AddingChildToGroupForm(forms.Form):
+    group = forms.ModelChoiceField(queryset=Group.objects.all().order_by('pk'))
     child = forms.ModelChoiceField(queryset=Child.objects.all(), widget=forms.HiddenInput)
+
+
+class AddingTeacherToGroupForm(forms.Form):
+    group = forms.ModelChoiceField(queryset=Group.objects.all().order_by('pk'))
+    teacher = forms.ModelChoiceField(queryset=Teacher.objects.all(), widget=forms.HiddenInput)

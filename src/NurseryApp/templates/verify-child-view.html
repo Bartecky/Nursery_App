@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block content %}
-    <h3>{{ child }}</h3>
-    {{ child.get_status_display }}
+    <div>
+        There are <strong>{{ children }}</strong> children on waiting list.
+    </div><hr>
     <input type="button" onclick="location.href='{% url 'child-list-view' %}'"
            class="btn btn-info"
            value="Back to list">

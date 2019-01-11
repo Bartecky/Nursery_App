@@ -14,11 +14,11 @@
                 </tr>
                 {% for object in object_list %}
                     <tr>
-                        <td><a href="{% url 'child-detail-view' object.pk %}">{{ object }}</a></td>
+                        <td><strong><a href="{% url 'child-detail-view' object.pk %}">{{ object }}</a><strong></td>
                         <td>{{ object.parent }}</td>
                         <td>{{ object.day_of_birth }}</td>
                         {% if object.get_status_display == 'Accepted' %}
-                            <strong><td class="green-color">{{ object.get_status_display }}</td></strong>
+                            <td class="green-color">{{ object.get_status_display }}</td>
                         {% else %}
                         <td>{{ object.get_status_display }}</td>
                         {% endif %}
@@ -35,7 +35,7 @@
                             <td><input type="button"
                                        onclick="location.href='{% url 'child-delete-view'  object.pk %}'"
                                        class="btn btn-warning"
-                                       value="Remove form Nursery"></td>
+                                       value="Remove"></td>
                         {% endif %}
                     </tr>
                 {% endfor %}
@@ -44,7 +44,7 @@
         <div class="col-sm-4">
             <h3>Group List</h3>
             {% for group in groups %}
-                {{ group }}<br>
+                <strong><a href="{% url 'group-detail-view' group.pk %}">{{ group }}</a> </strong><br>
                 {{ group.description }}
                 <hr>
             {% endfor %}

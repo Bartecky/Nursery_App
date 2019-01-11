@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ block.super }} | Parent list
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12 col-xs-12">
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Parent</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Child</th>
+                </tr>
+                {% for object in object_list %}
+                    <tr>
+                        <td>{{ object.user.username }}</td>
+                        <td align="center">{{ object }}</td>
+                        <td align="center">{{ object.phone }}</td>
+                        <td align="center">{{ object.email }}</td>
+                        {% for child in object.child.all %}
+                            <td align="center">{{ child }}</td>
+                        {% empty %}
+                            <td align="center">No children</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            <div>
+                <input type="button"
+                       onclick="location.href='{% url 'group-create-view' %}'"
+                       class="btn btn-success"
+                       value="Add new group">
+            </div>
+        </div>
+    </div>
+{% endblock %}

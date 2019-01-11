@@ -50,7 +50,9 @@ from NurseryApp.views import (
     DietDeleteView,
     DietListView,
     VerifyChildView,
-    AddingToGroupView
+    AddingChildToGroupView,
+    AddingTeacherToGroupView,
+    ParentListView
 )
 
 urlpatterns = [
@@ -90,7 +92,9 @@ urlpatterns = [
     url(r'^diet/delete/(?P<pk>(\d)+)/$', DietDeleteView.as_view(), name='diet-delete-view'),
     url(r'^diet/list/$', DietListView.as_view(), name='diet-list-view'),
     url(r'^verify_child/(?P<pk>(\d)+)/$', VerifyChildView.as_view(), name='verify-child-view'),
-    url(r'^child/(?P<pk>(\d)+)/add_group/$', AddingToGroupView.as_view(), name='add-child-group-view')
+    url(r'^child/(?P<pk>(\d)+)/add_group/$', AddingChildToGroupView.as_view(), name='add-child-group-view'),
+    url(r'^teacher/(?P<pk>(\d)+)/add_group/$', AddingTeacherToGroupView.as_view(), name='add-teacher-group-view'),
+    url(r'^parents/$', ParentListView.as_view(), name='parent-list-view')
 
 
 ]
