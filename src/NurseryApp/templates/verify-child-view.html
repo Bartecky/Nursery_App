@@ -6,7 +6,7 @@
 
 {% block content %}
     <div>
-        There are <strong>{{ children|add:1 }}</strong> children on waiting list (with yours).
+        There are <strong>{{ children|add:1 }}</strong> children on waiting list.
     </div><hr>
     <input type="button" onclick="location.href='{% url 'child-list-view' %}'"
            class="btn btn-info"

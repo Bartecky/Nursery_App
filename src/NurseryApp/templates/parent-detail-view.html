@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load fontawesome %}
+
+{% block title %}
+    {{ block.super }} | Parent Detail
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h4>Child Detail</h4>
+            <h4 class="orange">{{ object }}</h4>
+            Phone : {{ object.phone }}<br>
+            Email : {{ object.email }}<br>
+            Acive: {{ object.active }}<br>
+            <hr>
+            <h4>Child/Children</h4>
+            {% for child in object.child_set.all %}
+                <a class="orange" href="{% url 'child-detail-view' child.pk %}">{{ child }}</a><br>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

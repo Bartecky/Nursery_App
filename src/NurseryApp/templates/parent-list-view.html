@@ -12,7 +12,7 @@
                 {% for object in object_list %}
                     {% if object.child_set.all.count == 0 %}
                     {% else %}
-                        <strong>{{ object }}</strong><br>
+                        <strong><a class='orange' href="{% url 'parent-detail-view' object.pk %}">{{ object }}</a></strong><br>
                         {% for child in object.child_set.all %}
                             <li>{{ child }}</li>
                         {% endfor %}
@@ -25,7 +25,7 @@
             <h4>Parents without children</h4>
             {% for object in object_list %}
                 {% if object.child_set.all.count == 0 and object.active %}
-                    <li><strong>{{ object }}</strong></li><br>
+                    <strong><a class='orange' href="{% url 'parent-detail-view' object.pk %}">{{ object }}</a></strong><br>
                     {% else %}
                 {% endif %}
             {% endfor %}

@@ -40,7 +40,7 @@
         </div>
     {% endif %}
     <hr>
-    <h4>Nursery's statistics</h4>
+    <h4>Stats</h4>
     <div class="row">
         <div class="col-sm-4">
             <table>
@@ -84,10 +84,23 @@
                 {% endfor %}
             </table>
         </div>
+    </div><hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4>Messages</h4>
+            {% for message in msg %}
+                {% if request.user.parent == message.receiver %}
+                    {{ message.content }}<br>
+                    <small class="orange">via {{ message.sender }} | {{ message.add_time }}</small><br><br>
+                {% endif %}
+            {% empty %}
+            {% endfor %}
+            <hr>
+        </div>
     </div>
-    <hr>
     <h4>Contacts</h4>
     <div class="col-sm-12">
-        {% fontawesome_icon 'envelope' color='blue' %} <a class="orange" href="">nursery.recruitment@nursery.com</a><br>
+        {% fontawesome_icon 'envelope' color='blue' %} <a class="orange" href="">nursery.recruitment@nursery.com</a> |
+        {% fontawesome_icon 'phone' color='blue' %} <a class="orange" href="">+48 ___ ___ ___ </a>
     </div>
 {% endblock %}

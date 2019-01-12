@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Child, Parent, Group, Teacher, Caregiver, Activity, Diet
+from .models import Child, Parent, Group, Teacher, Caregiver, Activity, Diet, Message
 from django.core.validators import EmailValidator
 import datetime
 
@@ -119,14 +119,35 @@ class AddingTeacherToGroupForm(forms.Form):
     group = forms.ModelChoiceField(queryset=Group.objects.all().order_by('pk'))
     teacher = forms.ModelChoiceField(queryset=Teacher.objects.all(), widget=forms.HiddenInput)
 
-# class MessageCreateForm(forms.ModelForm):
-#     sender = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput)
-#     receiver = forms.ModelChoiceField(queryset=User.objects.all())
-#     class Meta:
-#         model = Message
-#         fields = [
-#             'sender',
-#             'receiver',
-#             'subject',
-#             'content',
-#         ]
+
+class MessageCreateForm(forms.ModelForm):
+    sender = forms.ModelChoiceField(queryset=Teacher.objects.all(), widget=forms.HiddenInput)
+    receiver = forms.ModelChoiceField(queryset=Parent.objects.all(), widget=forms.HiddenInput)
+
+    class Meta:
+        model = Message
+        fields = [
+            'sender',
+            'receiver',
+            'subject',
+            'content',
+        ]
+
+
+class ParentUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Parent
+        fields = [
+            'first_name',
+            'last_name',
+            'phone',
+            'email',
+        ]
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if len(phone) != 9:
+              raise forms.ValidationError('Number must be nine-digit')
+        return phone
+
+

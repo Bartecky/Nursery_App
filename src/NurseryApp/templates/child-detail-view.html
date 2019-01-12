@@ -29,7 +29,7 @@
             </div>
             <div>
                 <hr>
-            <h4>Diets</h4>
+                <h4>Diets</h4>
                 {% for diet in object.diet.all %}
                     {{ diet }}<br>
                 {% empty %}
@@ -38,18 +38,19 @@
                 {% endfor %}
             </div>
             <div>
-            <hr>
-            <h4>Group</h4>
-            <strong class="orange">{{ object.group }}</strong><br><br>
+                <hr>
+                <h4>Group</h4>
+                <strong class="orange">{{ object.group }}</strong><br><br>
                 <h4>Teacher</h4>
                 {% for teacher in object.group.teacher_set.all %}
                     {{ teacher }}<br>
                     {{ teacher.phone }}<br>
-                    {{ teacher.email }}<br><hr>
+                    {{ teacher.email }}<br>
+                    <hr>
                 {% empty %}
                     <strong class="orange">None</strong>
                 {% endfor %}
-        </div>
+            </div>
         </div>
 
 
@@ -61,7 +62,11 @@
             <div>
                 Login: {{ object.parent.user.username }}<br>
                 Name: {{ object.parent }}<br>
-                Phone: {{ object.parent.phone }}<br>
+                {% if object.parent.phone %}
+                    Phone: {{ object.parent.phone }}<br>
+                {% else %}
+                    Phone: <small><a href="{% url 'parent-update-view' object.parent.pk %}">Add</a></small><br>
+                {% endif %}
                 Email: {{ object.parent.email }}<br>
             </div>
             <hr>

@@ -53,8 +53,10 @@ from NurseryApp.views import (
     AddingChildToGroupView,
     AddingTeacherToGroupView,
     ParentListView,
+    ParentDetailView,
+    ParentUpdateView,
     SetParentNotActive,
-    # MessageCreateView
+    MessageCreateView
 )
 
 urlpatterns = [
@@ -97,8 +99,10 @@ urlpatterns = [
     url(r'^child/(?P<pk>(\d)+)/add_group/$', AddingChildToGroupView.as_view(), name='add-child-group-view'),
     url(r'^teacher/(?P<pk>(\d)+)/add_group/$', AddingTeacherToGroupView.as_view(), name='add-teacher-group-view'),
     url(r'^parents/$', ParentListView.as_view(), name='parent-list-view'),
+    url(r'^parent/update/(?P<pk>(\d)+)/$', ParentUpdateView.as_view(), name='parent-update-view'),
+    url(r'^parent/detail/(?P<pk>(\d)+)/$', ParentDetailView.as_view(), name='parent-detail-view'),
     url(r'^parents/inactive/$', SetParentNotActive.as_view(), name='parent-inactive-view'),
-    # url(r'^(?P<sender_pk>(\d)+)/send_message/(?P<receiver_pk>(\d)+)$', MessageCreateView.as_view(), name='message-create-view')
+    url(r'^(?P<sender_pk>(\d)+)/send_message/(?P<receiver_pk>(\d)+)$', MessageCreateView.as_view(), name='message-create-view')
 
 
 

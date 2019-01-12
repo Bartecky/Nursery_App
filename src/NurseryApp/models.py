@@ -27,6 +27,7 @@ class Parent(models.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
+
 class Child(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=64)
@@ -61,7 +62,6 @@ class Group(models.Model):
 
 
 class Teacher(models.Model):
-    # user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
@@ -112,9 +112,12 @@ class Diet(models.Model):
         return reverse_lazy('diet-detail-view', kwargs={'pk': self.pk})
 
 
-# class Message(models.Model):
-#     sender = models.ForeignKey(Teacher, related_name='sender', on_delete=models.CASCADE)
-#     receiver = models.ForeignKey(Parent, related_name='receiver', on_delete=models.CASCADE)
-#     subject = models.CharField(max_length=256)
-#     content = models.TextField()
-#     add_time = models.DateTimeField(auto_now_add=True)
+class Message(models.Model):
+    sender = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(Parent, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=256)
+    content = models.TextField()
+    add_time = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse_lazy('teacher-list-view')

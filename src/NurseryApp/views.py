@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group as UserGroup
 from django.contrib.auth import login, authenticate
-from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet
+from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet, Message
 from .forms import (SignupUserForm,
                     ChildCreateForm,
                     GroupCreateForm,
@@ -14,6 +14,8 @@ from .forms import (SignupUserForm,
                     DietCreateForm,
                     AddingChildToGroupForm,
                     AddingTeacherToGroupForm,
+                    MessageCreateForm,
+                    ParentUpdateForm
                     )
 from django.views.generic import View, CreateView, DetailView, UpdateView, DeleteView, ListView
 from django.contrib import messages
@@ -75,13 +77,13 @@ class MainPageView(LoginRequiredMixin, View):
         diets = Diet.objects.all().order_by('name')
         activities = Activity.objects.all().order_by('name')
         teachers = Teacher.objects.all()
-        # messages = Message.objects.all()
+        msg = Message.objects.all()
         ctx = {
             'groups': groups,
             'diets': diets,
             'activities': activities,
-            'teachers': teachers
-            # 'messages': messages
+            'teachers': teachers,
+            'msg': msg
         }
         if not user.is_superuser:
             ctx['parent'] = get_object_or_404(Parent, user=user)
@@ -141,7 +143,7 @@ class ChildDeleteView(PermissionRequiredMixin, DeleteView):
 
 
 class ChildListView(PermissionRequiredMixin, ListView):
-    queryset = Child.objects.all().order_by('-status')
+    queryset = Child.objects.all().order_by('status')
     template_name = 'child-list-view.html'
     paginate_by = 6
     permission_required = 'NurseryApp.view_group'
@@ -409,14 +411,27 @@ class SetParentNotActive(View):
         messages.success(request, '{}'.format('Set \'INACTIVE\' status for users without registered children'))
         return render(request, 'parent-list-view.html', {'object_list': object_list})
 
-# class MessageCreateView(CreateView):
-#     form_class = MessageCreateForm
-#     template_name = 'message-create-view.html'
-#
-#     def get_initial(self):
-#         initial = super(MessageCreateView, self).get_initial()
-#         sender_pk = self.kwargs.get('sender_pk')
-#         receiver_pk = self.kwargs.get('receiver_pk')
-#         initial['sender'] = User.objects.get(pk=sender_pk)
-#         initial['receiver'] = User.objects.get(pk=receiver_pk)
-#         return initial
+
+class ParentDetailView(DetailView):
+    queryset = Parent.objects.all()
+    template_name = 'parent-detail-view.html'
+
+class ParentUpdateView(UpdateView):
+    queryset = Parent.objects.all()
+    template_name = 'parent-update-view.html'
+    form_class = ParentUpdateForm
+    success_url = reverse_lazy('main-view')
+
+
+class MessageCreateView(CreateView):
+    form_class = MessageCreateForm
+    template_name = 'message-create-view.html'
+
+
+    def get_initial(self):
+        initial = super(MessageCreateView, self).get_initial()
+        sender_pk = self.kwargs.get('sender_pk')
+        receiver_pk = self.kwargs.get('receiver_pk')
+        initial['sender'] = Teacher.objects.get(pk=sender_pk)
+        initial['receiver'] = Parent.objects.get(pk=receiver_pk)
+        return initial

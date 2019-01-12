@@ -7,8 +7,8 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-12">
-           <h4>Teacher Detail</h4>
+        <div class="col-sm-6">
+            <h4>Teacher Detail</h4>
             <h4 class="orange">{{ object }}</h4>
             Group:
             <strong>{{ object.group }}</strong><br>
@@ -18,8 +18,13 @@
                 <a href="{% url 'child-update-view' object.pk %}">Update</a> |
                 <a href="{% url 'child-delete-view' object.pk %}">Delete</a>
             </small>
-            <div>
+
         </div>
-    </div>
+        <div class="col-sm-6">
+            <h4>The children she/he looks after</h4>
+            {% for child in object.group.child_set.all %}
+                <a href="{% url 'message-create-view' sender_pk=object.pk receiver_pk=child.parent.pk %}">{% fontawesome_icon 'envelope' color='blue' %}</a>{{ child }}<br>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
