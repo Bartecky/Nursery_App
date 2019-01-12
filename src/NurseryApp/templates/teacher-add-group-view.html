@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    Add <strong>{{ teacher }}</strong> to:
+    <h3>Choose group for <span class="orange">{{ teacher }}</span></h3>
     {% include 'form.html' with form=form btn_title='Add' %}
 {% endblock %}

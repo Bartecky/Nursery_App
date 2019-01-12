@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User
+from django.contrib.auth.models import Group as UserGroup
 from django.contrib.auth import login, authenticate
-from django.contrib.contenttypes.models import ContentType
 from .models import Parent, Child, Group, Teacher, Caregiver, Activity, Diet
 from .forms import (SignupUserForm,
                     ChildCreateForm,
@@ -19,11 +19,16 @@ from django.views.generic import View, CreateView, DetailView, UpdateView, Delet
 from django.contrib import messages
 import datetime
 from dateutil.relativedelta import relativedelta
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 
 
 class NurseryLoginView(LoginView):
     template_name = 'login-page.html'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('main-view')
+        return super(NurseryLoginView, self).get(request)
 
 
 class NurseryLogoutView(LogoutView):
@@ -44,7 +49,8 @@ class SignupView(View):
                 username=data['username'],
                 email=data['email'],
                 first_name=data['first_name'],
-                last_name=data['last_name'])
+                last_name=data['last_name']
+            )
             user.set_password(data['password'])
             user.save()
             parent = Parent.objects.create(
@@ -53,25 +59,28 @@ class SignupView(View):
                 last_name=user.last_name,
                 email=user.email
             )
-            user.save()
             parent.save()
+            grp = get_object_or_404(UserGroup, name='parents')
+            user.groups.add(grp)
             user_auth = authenticate(username=data['username'], password=data['password'])
             login(request, user_auth)
             return redirect('main-view')
         return render(request, 'signup-page.html', ctx)
 
 
-class MainPageView(View):
+class MainPageView(LoginRequiredMixin, View):
     def get(self, request):
         user = get_object_or_404(User, id=self.request.user.id)
         groups = Group.objects.all().order_by('pk')
         diets = Diet.objects.all().order_by('name')
         activities = Activity.objects.all().order_by('name')
+        teachers = Teacher.objects.all()
         # messages = Message.objects.all()
         ctx = {
             'groups': groups,
             'diets': diets,
             'activities': activities,
+            'teachers': teachers
             # 'messages': messages
         }
         if not user.is_superuser:
@@ -82,7 +91,7 @@ class MainPageView(View):
 class ChildCreateView(CreateView):
     template_name = 'child-create-view.html'
     form_class = ChildCreateForm
-
+    permission_required = 'NurseryApp.add_child'
 
     def get_initial(self):
         initial = super(ChildCreateView, self).get_initial()
@@ -90,10 +99,15 @@ class ChildCreateView(CreateView):
         initial['parent'] = get_object_or_404(Parent, pk=pk)
         return initial
 
+    def form_valid(self, form):
+        messages.success(self.request, '{}'.format('Registered! We\'ll contact you soon'))
+        return super(ChildCreateView, self).form_valid(form)
+
 
 class ChildDetailView(DetailView):
     queryset = Child.objects.all()
     template_name = 'child-detail-view.html'
+    permission_required = 'NurseryApp.view_child'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -108,21 +122,29 @@ class ChildDetailView(DetailView):
         return context
 
 
-class ChildUpdateView(UpdateView):
+class ChildUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Child.objects.all()
     form_class = ChildCreateForm
     template_name = 'child-update-view.html'
+    permission_required = 'NurseryApp.change_child'
+
+    def form_valid(self, form):
+        messages.success(self.request, '{}'.format('Updated child data!'))
+        return super(ChildUpdateView, self).form_valid(form)
 
 
-class ChildDeleteView(DeleteView):
+class ChildDeleteView(PermissionRequiredMixin, DeleteView):
     model = Child
     template_name = 'child-delete-view.html'
     success_url = reverse_lazy('main-view')
+    permission_required = 'NurseryApp.delete_child'
 
 
-class ChildListView(ListView):
+class ChildListView(PermissionRequiredMixin, ListView):
     queryset = Child.objects.all().order_by('-status')
     template_name = 'child-list-view.html'
+    paginate_by = 8
+    permission_required = 'NurseryApp.view_group'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -131,67 +153,78 @@ class ChildListView(ListView):
         return context
 
 
-class GroupCreateView(CreateView):
+class GroupCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'group-create-view.html'
     form_class = GroupCreateForm
     success_url = reverse_lazy('group-list-view')
+    permission_required = 'NurseryApp.add_group'
 
 
-class GroupDetailView(DetailView):
+class GroupDetailView(PermissionRequiredMixin, DetailView):
     queryset = Group.objects.all()
     template_name = 'group-detail-view.html'
+    permission_required = 'NurseryApp.view_group'
 
 
-class GroupUpdateView(UpdateView):
+class GroupUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Group.objects.all()
     form_class = GroupCreateForm
     template_name = 'group-update-view.html'
     success_url = reverse_lazy('group-list-view')
+    permission_required = 'NurseryApp.change_group'
 
 
-class GroupDeleteView(DeleteView):
+class GroupDeleteView(PermissionRequiredMixin, DeleteView):
     model = Group
     template_name = 'group-delete-view.html'
     success_url = reverse_lazy('group-list-view')
+    permission_required = 'NurseryApp.delete_group'
 
 
-class GroupListView(ListView):
+class GroupListView(PermissionRequiredMixin, ListView):
     queryset = Group.objects.all().order_by('pk')
     template_name = 'group-list-view.html'
+    permission_required = 'NurseryApp.view_group'
 
 
-class TeacherCreateView(CreateView):
+class TeacherCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'teacher-create-view.html'
     form_class = TeacherCreateForm
     success_url = reverse_lazy('teacher-list-view')
+    permission_required = 'NurseryApp.add_teacher'
 
 
-class TeacherDetailView(DetailView):
+class TeacherDetailView(PermissionRequiredMixin, DetailView):
     queryset = Teacher.objects.all()
     template_name = 'teacher-detail-view.html'
+    permission_required = 'NurseryApp.view_teacher'
 
 
-class TeacherUpdateView(UpdateView):
+class TeacherUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Teacher.objects.all()
     form_class = TeacherCreateForm
     template_name = 'teacher-update-view.html'
     success_url = reverse_lazy('teacher-list-view')
+    permission_required = 'NurseryApp.change_teacher'
 
 
-class TeacherDeleteView(DeleteView):
+class TeacherDeleteView(PermissionRequiredMixin, DeleteView):
     model = Teacher
     template_name = 'teacher-delete-view.html'
     success_url = reverse_lazy('teacher-list-view')
+    permission_required = 'NurseryApp.delete_teacher'
 
 
-class TeacherListView(ListView):
+class TeacherListView(PermissionRequiredMixin, ListView):
     queryset = Teacher.objects.all().order_by('group__name')
     template_name = 'teacher-list-view.html'
+    permission_required = 'NurseryApp.view_teacher'
 
 
-class CaregiverCreateView(CreateView):
+class CaregiverCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'caregiver-create-view.html'
     form_class = CaregiverCreateForm
+    permission_required = 'NurseryApp.add_caregiver'
 
     def get_initial(self):
         initial = super(CaregiverCreateView, self).get_initial()
@@ -199,78 +232,94 @@ class CaregiverCreateView(CreateView):
         initial['parent'] = get_object_or_404(Parent, pk=pk)
         return initial
 
+    def form_valid(self, form):
+        messages.success(self.request, '{}'.format('Added Caregiver!'))
+        return super(CaregiverCreateView, self).form_valid(form)
 
-class CaregiverDetailView(DetailView):
+
+class CaregiverDetailView(PermissionRequiredMixin, DetailView):
     queryset = Caregiver.objects.all()
     template_name = 'caregiver-detail-view.html'
+    permission_required = 'NurseryApp.view_caregiver'
 
 
-class CaregiverUpdateView(UpdateView):
+class CaregiverUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Caregiver.objects.all()
     form_class = CaregiverCreateForm
     template_name = 'caregiver-update-view.html'
+    permission_required = 'NurseryApp.change_caregiver'
 
 
-class CaregiverDeleteView(DeleteView):
+class CaregiverDeleteView(PermissionRequiredMixin, DeleteView):
     model = Caregiver
     template_name = 'caregiver-delete-view.html'
     success_url = reverse_lazy('main-view')
+    permission_required = 'NurseryApp.delete_caregiver'
 
 
-class ActivityCreateView(CreateView):
+class ActivityCreateView(PermissionRequiredMixin, CreateView):
     queryset = Activity.objects.all()
     form_class = ActivityCreateForm
     template_name = 'activity-create-view.html'
+    permission_required = 'NurseryApp.add_activity'
 
 
-class ActivityDetailView(DetailView):
+class ActivityDetailView(PermissionRequiredMixin, DetailView):
     queryset = Activity.objects.all()
     template_name = 'activity-detail-view.html'
+    permission_required = 'NurseryApp.view_activity'
 
 
-class ActivityUpdateView(UpdateView):
+class ActivityUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Activity.objects.all()
     form_class = ActivityCreateForm
-    template_name = 'activity-update-view.html'
+    permission_required = 'NurseryApp.change_activity'
 
 
-class ActivityDeleteView(DeleteView):
+class ActivityDeleteView(PermissionRequiredMixin, DeleteView):
     model = Activity
     template_name = 'activity-delete-view.html'
     success_url = reverse_lazy('main-view')
+    permission_required = 'NurseryApp.delete_activity'
 
 
-class ActivityListView(ListView):
+class ActivityListView(PermissionRequiredMixin, ListView):
     queryset = Activity.objects.all()
     template_name = 'activity-list-view.html'
+    permission_required = 'NurseryApp.view_activity'
 
 
-class DietCreateView(CreateView):
+class DietCreateView(PermissionRequiredMixin, CreateView):
     queryset = Diet.objects.all()
     form_class = DietCreateForm
     template_name = 'diet-create-view.html'
+    permission_required = 'NurseryApp.add_diet'
 
 
-class DietDetailView(DetailView):
+class DietDetailView(PermissionRequiredMixin, DetailView):
     queryset = Diet.objects.all()
     template_name = 'diet-detail-view.html'
+    permission_required = 'NurseryApp.view_diet'
 
 
-class DietUpdateView(UpdateView):
+class DietUpdateView(PermissionRequiredMixin, UpdateView):
     queryset = Diet.objects.all()
     form_class = DietCreateForm
     template_name = 'diet-update-view.html'
+    permission_required = 'NurseryApp.change_diet'
 
 
-class DietDeleteView(DeleteView):
+class DietDeleteView(PermissionRequiredMixin, DeleteView):
     model = Diet
     template_name = 'diet-delete-view.html'
     success_url = reverse_lazy('main-view')
+    permission_required = 'NurseryApp.delete_diet'
 
 
-class DietListView(ListView):
+class DietListView(PermissionRequiredMixin, ListView):
     queryset = Diet.objects.all()
     template_name = 'diet-list-view.html'
+    permission_required = 'NurseryApp.view_diet'
 
 
 class VerifyChildView(View):
@@ -290,7 +339,8 @@ class AddingChildToGroupView(View):
         pk = self.kwargs.get('pk')
         child = Child.objects.get(pk=pk)
         form = AddingChildToGroupForm(initial={'child': child})
-        return render(request, 'child-add-group-view.html', {'form': form})
+        return render(request, 'child-add-group-view.html', {'form': form,
+                                                             'child': child})
 
     def post(self, request, pk):
         form = AddingChildToGroupForm(request.POST or None)
@@ -336,9 +386,10 @@ class AddingTeacherToGroupView(View):
         return render(request, 'teacher-add-group-view.html', {'form': form})
 
 
-class ParentListView(ListView):
+class ParentListView(PermissionRequiredMixin, ListView):
     queryset = Parent.objects.all()
     template_name = 'parent-list-view.html'
+    permission_required = 'NurseryApp.view_parent'
 
 
 class SetParentNotActive(View):

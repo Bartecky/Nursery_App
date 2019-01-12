@@ -33,8 +33,8 @@ class Child(models.Model):
     last_name = models.CharField(max_length=64)
     day_of_birth = models.DateField()
     group = models.ForeignKey('Group', blank=True, null=True, on_delete=models.CASCADE)
-    activity = models.ManyToManyField('Activity', blank=True, null=True)
-    diet = models.ManyToManyField('Diet', blank=True, null=True)
+    activity = models.ManyToManyField('Activity', blank=True)
+    diet = models.ManyToManyField('Diet', blank=True)
     registration_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=CHILD_STATUS, default='1')
     active = models.BooleanField(default=True)
@@ -61,7 +61,7 @@ class Group(models.Model):
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=9, unique=True, blank=True, null=True)
@@ -113,8 +113,8 @@ class Diet(models.Model):
 
 
 # class Message(models.Model):
-#     sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
-#     receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
+#     sender = models.ForeignKey(Teacher, related_name='sender', on_delete=models.CASCADE)
+#     receiver = models.ForeignKey(Parent, related_name='receiver', on_delete=models.CASCADE)
 #     subject = models.CharField(max_length=256)
 #     content = models.TextField()
 #     add_time = models.DateTimeField(auto_now_add=True)

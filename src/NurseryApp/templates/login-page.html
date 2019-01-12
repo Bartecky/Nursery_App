@@ -3,8 +3,9 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
+            <h3><span class="orange">Nursery</span> Login/Register Panel</h3>
             {% include 'form.html' with btn_title='Login' %}<hr>
-            <input type="button" onclick="location.href='{% url "signup-view" %}'" class="btn btn-info"
+            <input type="button" onclick="location.href='{% url "signup-view" %}'" class="btn btn-dark"
                    value="Register">
         </div>
     </div>

@@ -7,7 +7,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12 col-xs-12">
-            <table>
+            <table class="table table-striped">
                 <tr>
                     <th>Teacher</th>
                     <th>Phone</th>
@@ -22,7 +22,7 @@
                         {% if not object.group %}
                             <td><a href="{% url 'add-teacher-group-view' object.pk %}">Add to group</a></td>
                         {% else %}
-                            <td align="center">{{ object.group }}</td>
+                            <td>{{ object.group }}</td>
                         {% endif %}
                     </tr>
                 {% endfor %}

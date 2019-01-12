@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load fontawesome %}
 
 {% block content %}
     {% if not request.user.is_superuser %}
@@ -28,18 +29,18 @@
         <div class="row">
             <div class="col-sm-6">
                 <input type="button" onclick="location.href='{% url "child-create-view" parent.pk %}'"
-                       class="btn btn-info"
+                       class="btn btn-dark"
                        value="Add new child">
             </div>
             <div class="col-sm-6">
                 <input type="button" onclick="location.href='{% url "caregiver-create-view" parent.pk %}'"
-                       class="btn btn-info"
+                       class="btn btn-dark"
                        value="Add new caregiver">
             </div>
         </div>
     {% endif %}
     <hr>
-
+    <h4>Nursery's statistics</h4>
     <div class="row">
         <div class="col-sm-4">
             <table>
@@ -83,5 +84,10 @@
                 {% endfor %}
             </table>
         </div>
+    </div>
+    <hr>
+    <h4>Contacts</h4>
+    <div class="col-sm-12">
+        {% fontawesome_icon 'envelope' color='blue' %} <a class="orange" href="">nursery.recruitment@nursery.com</a><br>
     </div>
 {% endblock %}

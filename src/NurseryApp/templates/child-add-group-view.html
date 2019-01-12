@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h3>Choose group for <span class="orange">{{ child }}</span></h3>
     {% include 'form.html' with form=form btn_title='Add' %}
 {% endblock %}

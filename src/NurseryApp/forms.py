@@ -26,8 +26,11 @@ class ChildCreateForm(forms.ModelForm):
     day_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=[x for x in range(year - 4, year)]
     ))
-    diet = forms.ModelMultipleChoiceField(queryset=Diet.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
-    activity = forms.ModelMultipleChoiceField(queryset=Activity.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+    diet = forms.ModelMultipleChoiceField(queryset=Diet.objects.all(), widget=forms.CheckboxSelectMultiple,
+                                          required=False)
+    activity = forms.ModelMultipleChoiceField(queryset=Activity.objects.all(), widget=forms.CheckboxSelectMultiple,
+                                              required=False)
+
     class Meta:
         model = Child
         fields = [
@@ -115,7 +118,6 @@ class AddingChildToGroupForm(forms.Form):
 class AddingTeacherToGroupForm(forms.Form):
     group = forms.ModelChoiceField(queryset=Group.objects.all().order_by('pk'))
     teacher = forms.ModelChoiceField(queryset=Teacher.objects.all(), widget=forms.HiddenInput)
-
 
 # class MessageCreateForm(forms.ModelForm):
 #     sender = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput)

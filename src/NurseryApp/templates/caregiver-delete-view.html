@@ -4,5 +4,10 @@
     <form method="post">{% csrf_token %}
         <p>Remove <strong>{{ object }}</strong>?</p>
         <input type="submit" value="Confirm">
+        <input type="button"
+               onclick="location.href='{% url 'caregiver-detail-view' object.pk %}'"
+               class="btn btn-success"
+               value="Back to details">
     </form>
+
 {% endblock %}
