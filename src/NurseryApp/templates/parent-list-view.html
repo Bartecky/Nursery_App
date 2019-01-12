@@ -12,9 +12,9 @@
                 {% for object in object_list %}
                     {% if object.child_set.all.count == 0 %}
                     {% else %}
-                        <strong>Parent {{ object }}</strong><br>
+                        <strong>{{ object }}</strong><br>
                         {% for child in object.child_set.all %}
-                            {{ child }}<br>
+                            <li>{{ child }}</li>
                         {% endfor %}
                         <hr>
                     {% endif %}
@@ -25,8 +25,7 @@
             <h4>Parents without children</h4>
             {% for object in object_list %}
                 {% if object.child_set.all.count == 0 and object.active %}
-                    <strong>{{ object }}</strong><br>
-
+                    <li><strong>{{ object }}</strong></li><br>
                     {% else %}
                 {% endif %}
             {% endfor %}

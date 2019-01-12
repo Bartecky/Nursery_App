@@ -17,9 +17,13 @@
                 {% for object in object_list %}
                     <tr>
                         <td><a class="orange" href="{% url 'group-detail-view' object.pk %}">{{ object.name }}</a></td>
-                        <td align="center">{{ object.child_set.all|length }}</td>
-                        <td align="center">{{ object.max_capacity }}</td>
-                        <td align="center">{{ object.description }}</td>
+                        <td>{{ object.child_set.all|length }}</td>
+                        <td>{{ object.max_capacity }}</td>
+                        <td>{% if object.description %}
+                        {{ object.description }}
+                        {% else %}
+                            No description | <a href="{% url 'group-update-view' object.pk %}">Add here</a>
+                        {% endif %}</td>
                     </tr>
                 {% endfor %}
             </table>

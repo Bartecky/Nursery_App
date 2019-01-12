@@ -143,7 +143,7 @@ class ChildDeleteView(PermissionRequiredMixin, DeleteView):
 class ChildListView(PermissionRequiredMixin, ListView):
     queryset = Child.objects.all().order_by('-status')
     template_name = 'child-list-view.html'
-    paginate_by = 8
+    paginate_by = 6
     permission_required = 'NurseryApp.view_group'
 
     def get_context_data(self, **kwargs):
@@ -185,6 +185,8 @@ class GroupListView(PermissionRequiredMixin, ListView):
     queryset = Group.objects.all().order_by('pk')
     template_name = 'group-list-view.html'
     permission_required = 'NurseryApp.view_group'
+    paginate_by = 8
+
 
 
 class TeacherCreateView(PermissionRequiredMixin, CreateView):
@@ -219,6 +221,8 @@ class TeacherListView(PermissionRequiredMixin, ListView):
     queryset = Teacher.objects.all().order_by('group__name')
     template_name = 'teacher-list-view.html'
     permission_required = 'NurseryApp.view_teacher'
+    paginate_by = 8
+
 
 
 class CaregiverCreateView(PermissionRequiredMixin, CreateView):
@@ -287,6 +291,7 @@ class ActivityListView(PermissionRequiredMixin, ListView):
     queryset = Activity.objects.all()
     template_name = 'activity-list-view.html'
     permission_required = 'NurseryApp.view_activity'
+    paginate_by = 8
 
 
 class DietCreateView(PermissionRequiredMixin, CreateView):
@@ -320,6 +325,8 @@ class DietListView(PermissionRequiredMixin, ListView):
     queryset = Diet.objects.all()
     template_name = 'diet-list-view.html'
     permission_required = 'NurseryApp.view_diet'
+    paginate_by = 8
+
 
 
 class VerifyChildView(View):

@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-sm-8">
             <h3>Children List (all registered in nursery)</h3>
-            <table>
+            <table class="table table-striped">
                 <tr>
                     <th>Child</th>
                     <th>Parent</th>
@@ -14,13 +14,13 @@
                 </tr>
                 {% for object in object_list %}
                     <tr>
-                        <td><strong><a href="{% url 'child-detail-view' object.pk %}">{{ object }}</a><strong></td>
+                        <td><strong><a class="orange" href="{% url 'child-detail-view' object.pk %}">{{ object }}</a></strong></td>
                         <td>{{ object.parent }}</td>
                         <td>{{ object.day_of_birth }}</td>
                         {% if object.get_status_display == 'Accepted' %}
                             <td class="orange">{{ object.get_status_display }}</td>
                         {% else %}
-                        <td>{{ object.get_status_display }}</td>
+                            <td>{{ object.get_status_display }}</td>
                         {% endif %}
                         {% if  object.get_status_display == 'Verification' %}
                             <td><input type="button" onclick="location.href='{% url 'verify-child-view'  object.pk %}'"
@@ -34,7 +34,7 @@
                         {% elif object.get_status_display == 'Accepted' %}
                             <td><input type="button"
                                        onclick="location.href='{% url 'child-delete-view'  object.pk %}'"
-                                       class="btn btn-warning"
+                                       class="btn btn-dark"
                                        value="Remove"></td>
                         {% endif %}
                     </tr>
@@ -42,11 +42,10 @@
             </table>
         </div>
         <div class="col-sm-4">
-            <h3>Available groups</h3>
+            <h3>Nursery groups</h3>
             {% for group in groups %}
                 <strong><a href="{% url 'group-detail-view' group.pk %}">{{ group }}</a></strong>
                 {{ group.child_set.all|length }} / {{ group.max_capacity }}<br>
-                {{ group.description }}
                 <hr>
             {% endfor %}
         </div>

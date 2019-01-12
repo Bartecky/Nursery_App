@@ -18,7 +18,7 @@
                     <tr>
                         <td><a class='orange' href="{% url 'teacher-detail-view' object.pk %}">{{ object }}</a></td>
                         <td>{{ object.phone }}</td>
-                        <td align="center">{{ object.email }}</td>
+                        <td>{{ object.email }}</td>
                         {% if not object.group %}
                             <td><a href="{% url 'add-teacher-group-view' object.pk %}">Add to group</a></td>
                         {% else %}
