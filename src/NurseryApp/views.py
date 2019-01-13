@@ -190,7 +190,6 @@ class GroupListView(PermissionRequiredMixin, ListView):
     paginate_by = 8
 
 
-
 class TeacherCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'teacher-create-view.html'
     form_class = TeacherCreateForm
@@ -224,7 +223,6 @@ class TeacherListView(PermissionRequiredMixin, ListView):
     template_name = 'teacher-list-view.html'
     permission_required = 'NurseryApp.view_teacher'
     paginate_by = 8
-
 
 
 class CaregiverCreateView(PermissionRequiredMixin, CreateView):
@@ -330,7 +328,6 @@ class DietListView(PermissionRequiredMixin, ListView):
     paginate_by = 8
 
 
-
 class VerifyChildView(View):
     def get(self, request, pk):
         child = Child.objects.get(pk=pk)
@@ -416,6 +413,7 @@ class ParentDetailView(DetailView):
     queryset = Parent.objects.all()
     template_name = 'parent-detail-view.html'
 
+
 class ParentUpdateView(UpdateView):
     queryset = Parent.objects.all()
     template_name = 'parent-update-view.html'
@@ -427,7 +425,6 @@ class MessageCreateView(CreateView):
     form_class = MessageCreateForm
     template_name = 'message-create-view.html'
 
-
     def get_initial(self):
         initial = super(MessageCreateView, self).get_initial()
         sender_pk = self.kwargs.get('sender_pk')
@@ -435,3 +432,7 @@ class MessageCreateView(CreateView):
         initial['sender'] = Teacher.objects.get(pk=sender_pk)
         initial['receiver'] = Parent.objects.get(pk=receiver_pk)
         return initial
+
+    def form_valid(self, form):
+        messages.success(self.request, '{}'.format('Message was sent'))
+        return super(MessageCreateView, self).form_valid(form)

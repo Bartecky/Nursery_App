@@ -27,7 +27,6 @@ class Parent(models.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
-
 class Child(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=64)
