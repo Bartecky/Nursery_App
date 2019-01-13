@@ -68,6 +68,9 @@
                     Phone: <small><a href="{% url 'parent-update-view' object.parent.pk %}">Add</a></small><br>
                 {% endif %}
                 Email: {{ object.parent.email }}<br>
+                <small>
+                        <a href="{% url 'parent-update-view' object.parent.pk %}">Update</a>
+                </small>
             </div>
             <hr>
             <div>

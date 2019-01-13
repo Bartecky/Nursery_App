@@ -77,7 +77,7 @@ class MainPageView(LoginRequiredMixin, View):
         diets = Diet.objects.all().order_by('name')
         activities = Activity.objects.all().order_by('name')
         teachers = Teacher.objects.all()
-        msg = Message.objects.all()
+        msg = Message.objects.all().order_by('-add_time')
         ctx = {
             'groups': groups,
             'diets': diets,
@@ -436,3 +436,5 @@ class MessageCreateView(CreateView):
     def form_valid(self, form):
         messages.success(self.request, '{}'.format('Message was sent'))
         return super(MessageCreateView, self).form_valid(form)
+
+
