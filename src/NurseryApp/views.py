@@ -358,7 +358,7 @@ class AddingChildToGroupView(View):
             group = form.cleaned_data['group']
             group_object = Group.objects.get(name=group)
             if group_object.child_set.all().count() >= group_object.max_capacity:
-                messages.success(request, 'This group if full, pick another one')
+                messages.success(request, 'This group is full, pick another one!')
                 return redirect(reverse_lazy('child-list-view'))
             group_object.child_set.add(child)
             child.status = '3'
