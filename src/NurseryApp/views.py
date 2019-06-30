@@ -47,6 +47,9 @@ class SignupView(View):
         ctx = {'form': form}
         if form.is_valid():
             data = form.cleaned_data
+            if User.objects.filter(username=data['username']).exists():
+                messages.error(request, f'User "{data["username"]}" already exists')
+                return redirect('login-view')
             user = User(
                 username=data['username'],
                 email=data['email'],

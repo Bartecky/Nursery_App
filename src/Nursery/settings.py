@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
@@ -130,3 +130,5 @@ DATE_FORMAT = "d-m-Y"
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = reverse_lazy('main-view')
+
+LOGIN_URL = reverse_lazy('login-view')
